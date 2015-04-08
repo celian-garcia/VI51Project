@@ -1,0 +1,91 @@
+package fr.utbm.info.vi51.framework.environment
+
+import fr.utbm.info.vi51.framework.time.TimePercept
+import fr.utbm.info.vi51.framework.util.AddressUUIDScope
+import io.sarl.core.Behaviors
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import io.sarl.lang.core.Address
+import io.sarl.util.OpenEventSpace
+import java.util.UUID
+import java.util.concurrent.atomic.AtomicBoolean
+
+/** This agent is managing the physic space. 
+ *
+ * @author St&eacute;phane GALLAND &lt;stephane.galland@utbm.fr&gt;
+ */
+agent EnvironmentAgent {
+	
+	uses DefaultContextInteractions, Lifecycle, Behaviors
+
+	var environment : Environment
+	var space : OpenEventSpace
+	var myAdr : Address
+	
+	var influences = 0
+	
+	val freeze = new AtomicBoolean(false)
+	
+	on Initialize {
+		this.environment = (occurrence.parameters.get(0) as Environment);
+		var spaceId = (occurrence.parameters.get(1) as UUID);
+		this.space = defaultContext.getSpace(spaceId)
+		this.space.register(asEventListener)
+		this.myAdr = this.space.getAddress(ID)
+		emit(new SimulationAgentReady)
+	}
+	
+	on InfluenceEvent [!freeze.get] {
+		var id = occurrence.influence.emitter
+		if (id === null) {
+			id = occurrence.source.UUID
+		}
+		var body = this.environment.getAgentBodyFor(id)
+		body.influence(occurrence.influence)
+		this.influences ++
+		if (this.influences >= this.environment.getAgentBodyNumber()) {
+			runEnvironmentBehavior
+		}
+	}
+	
+	on StopSimulation {
+		killMe
+	}
+	
+	on StartSimulation {
+		runEnvironmentBehavior
+	}
+	
+	def runEnvironmentBehavior {
+		this.freeze.set(true)
+		this.influences = 0 
+		this.environment.runBehaviour
+		var delay = this.environment.timeManager.simulationDelay as long
+		if (delay > 0) {
+			Thread::sleep(delay)
+		}
+		this.freeze.set(false)
+		notifyAgentsOrDie
+	}
+	
+	def notifyAgentsOrDie {
+		var run = false
+		val timePercept = new TimePercept(
+			this.environment.timeManager.currentTime,
+			this.environment.timeManager.lastStepDuration)
+		for(body : this.environment.agentBodies) {
+			run = true
+			var ^event = new PerceptionEvent(
+				body.perceivedObjects,
+				new Percept(body),
+				timePercept)
+			^event.source = this.myAdr
+			this.space.emit(^event, new AddressUUIDScope(body.ID))
+		}
+		if (!run) {
+			killMe
+		}
+	}
+	
+}

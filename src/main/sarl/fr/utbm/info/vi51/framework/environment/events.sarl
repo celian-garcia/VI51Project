@@ -1,0 +1,48 @@
+package fr.utbm.info.vi51.framework.environment
+
+import fr.utbm.info.vi51.framework.time.TimePercept
+import java.util.List
+
+/** This event contains percepts. 
+ *
+ * @author St&eacute;phane GALLAND &lt;stephane.galland@utbm.fr&gt;
+ */
+event PerceptionEvent {
+	val body : Percept
+	val time : TimePercept
+	val perceptions : List<Percept>
+	new (p : List<Percept>, b : Percept, t : TimePercept) {
+		this.perceptions = p
+		this.body = b
+		this.time = t
+	}
+}
+
+/** This event contains an influence 
+ *
+ * @author St&eacute;phane GALLAND &lt;stephane.galland@utbm.fr&gt;
+ */
+event InfluenceEvent {
+	val influence : Influence
+	new (e : Influence) {
+		this.influence = e
+	}
+}
+
+/** This event is fired when a simulation agent is ready. 
+ *
+ * @author St&eacute;phane GALLAND &lt;stephane.galland@utbm.fr&gt;
+ */
+event SimulationAgentReady
+
+/** This event is for starting the simulation. 
+ *
+ * @author St&eacute;phane GALLAND &lt;stephane.galland@utbm.fr&gt;
+ */
+event StartSimulation
+
+/** This event is for stopping the simulation. 
+ *
+ * @author St&eacute;phane GALLAND &lt;stephane.galland@utbm.fr&gt;
+ */
+event StopSimulation

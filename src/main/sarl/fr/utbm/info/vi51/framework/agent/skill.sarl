@@ -1,0 +1,69 @@
+package fr.utbm.info.vi51.framework.^agent
+
+import fr.utbm.info.vi51.framework.environment.DynamicType
+import fr.utbm.info.vi51.framework.environment.InfluenceEvent
+import fr.utbm.info.vi51.framework.environment.KillInfluence
+import fr.utbm.info.vi51.framework.environment.MotionInfluence
+import fr.utbm.info.vi51.framework.math.Vector2f
+import fr.utbm.info.vi51.framework.util.AddressUUIDScope
+import io.sarl.core.Behaviors
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.lang.core.Address
+import io.sarl.util.OpenEventSpace
+import java.util.UUID
+
+skill StandardPhysicEnvironment implements PhysicEnvironment {
+
+	uses DefaultContextInteractions, Behaviors
+
+	val spaceID : UUID
+	val environmentID : UUID
+	var physicSpace : OpenEventSpace
+	var myAdr : Address
+	
+	new (spaceID : UUID, environmentID : UUID) {
+		this.environmentID = environmentID
+		this.spaceID = spaceID
+	}
+
+	def install {
+		do {
+			this.physicSpace = defaultContext.getSpace(this.spaceID)
+			Thread::yield
+		} while (this.physicSpace === null)
+		this.physicSpace.register(asEventListener)
+		this.myAdr = this.physicSpace.getAddress(owner.ID)
+	}
+	
+	def uninstall() {
+		var ^event = new InfluenceEvent(new KillInfluence)
+		^event.source = this.myAdr
+		this.physicSpace.emit(^event, new AddressUUIDScope(this.environmentID))
+		this.physicSpace = null
+	}
+	
+	def influenceKinematic(linearInfluence : Vector2f = null, angularInfluence : float = 0f) {
+		var mi : MotionInfluence
+		if (linearInfluence === null) {
+			mi = new MotionInfluence(DynamicType::KINEMATIC, angularInfluence)
+		} else {
+			mi = new MotionInfluence(DynamicType::KINEMATIC, linearInfluence, angularInfluence)
+		}
+		var ^event = new InfluenceEvent(mi)
+		^event.source = this.myAdr
+		this.physicSpace.emit(^event, new AddressUUIDScope(this.environmentID))
+	}
+	
+	def influenceSteering(linearInfluence : Vector2f = null, angularInfluence : float = 0f) {
+		var mi : MotionInfluence
+		if (linearInfluence === null) {
+			mi = new MotionInfluence(DynamicType::STEERING, angularInfluence)
+		} else {
+			mi = new MotionInfluence(DynamicType::STEERING, linearInfluence, angularInfluence)
+		}
+		var ^event = new InfluenceEvent(mi)
+		^event.source = this.myAdr
+		this.physicSpace.emit(^event, new AddressUUIDScope(this.environmentID))
+	}
+	
+}

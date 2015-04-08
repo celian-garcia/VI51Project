@@ -1,0 +1,22 @@
+package fr.utbm.info.vi51.framework.^agent
+
+import fr.utbm.info.vi51.framework.math.Vector2f
+
+capacity PhysicEnvironment {
+	
+	/** Invoked to send the influence to the environment.
+	 * 
+	 * @param linearInfluence is the linear influence to apply on the object.
+	 * @param angularInfluence is the angular influence to apply on the object.
+	 */
+	def influenceKinematic(linearInfluence : Vector2f = null, angularInfluence : float = 0f)
+	
+	/** Invoked to send the influence to the environment.
+	 * 
+	 * @param linearInfluence is the linear influence to apply on the object.
+	 * @param angularInfluence is the angular influence to apply on the object.
+	 */
+	def influenceSteering(linearInfluence : Vector2f = null, angularInfluence : float = 0f)
+	
+}
+
