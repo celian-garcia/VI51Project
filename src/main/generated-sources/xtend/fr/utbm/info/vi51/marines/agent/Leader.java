@@ -1,4 +1,4 @@
-package fr.utbm.info.vi51.labwork3.agent;
+package fr.utbm.info.vi51.marines.agent;
 
 import com.google.common.base.Objects;
 
