@@ -67,6 +67,7 @@ public class MainProgram {
 		environment.createFollower();
 		environment.createFollower();
 		environment.createFollower();
+		environment.createRock();
 		
 		FrameworkGUI gui = new GUI(WORLD_SIZE_X, WORLD_SIZE_Y, environment.getTimeManager(), formation);
 

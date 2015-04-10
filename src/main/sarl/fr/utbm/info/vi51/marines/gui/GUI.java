@@ -226,6 +226,8 @@ public class GUI extends AbstractFrameworkGUI {
 		Icon icon = null;
 		if ("TARGET".equals(type)) {
 			icon = CARROT_ICON;
+		} else if ("ROCK".equals(type)) {
+			icon = CARROT_ICON;
 		}
 			
 		if (this.showIcons.isSelected() && icon != null) {

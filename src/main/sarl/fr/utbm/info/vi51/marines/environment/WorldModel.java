@@ -30,6 +30,7 @@ import fr.utbm.info.vi51.framework.environment.DynamicType;
 import fr.utbm.info.vi51.framework.environment.Influence;
 import fr.utbm.info.vi51.framework.environment.MotionInfluence;
 import fr.utbm.info.vi51.framework.environment.Percept;
+import fr.utbm.info.vi51.framework.environment.RepulsiveObject;
 import fr.utbm.info.vi51.framework.environment.SituatedObject;
 import fr.utbm.info.vi51.framework.gui.WorldModelStateProvider;
 import fr.utbm.info.vi51.framework.math.Circle2f;
@@ -51,8 +52,11 @@ import fr.utbm.info.vi51.framework.util.LocalizedString;
 public class WorldModel extends AbstractEnvironment implements WorldModelStateProvider {
 
 	private final static float RABBIT_SIZE = 20f;
+	private final static float ROCK_SIZE = 20f;
 	
 	private MouseTarget mouseTarget = null;
+	
+	private RepulsiveObject repObject;
 	
 	/**
 	 * @param width is the width of the world.
@@ -83,6 +87,10 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 			if (this.mouseTarget!=null) {
 				allPercepts.add(new Percept(this.mouseTarget));
 			}
+			
+			// add repulsive Objects
+			allPercepts.add(new Percept(this.repObject));
+						
 
 			float bestDistance = Float.MAX_VALUE;
 			AgentBody nearestBody = null;
@@ -167,9 +175,9 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 	@Override
 	public Iterable<? extends SituatedObject> getAllObjects() {
 		if (this.mouseTarget != null) {
-			return CollectionUtil.newIterable(getAgentBodies(), this.mouseTarget);
+			return CollectionUtil.newIterable(getAgentBodies(), this.mouseTarget, this.repObject);
 		}
-		return getAgentBodies();
+		return CollectionUtil.newIterable(getAgentBodies(), this.repObject);
 	}
 
 	@Override
@@ -204,6 +212,19 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 	 */
 	public void createFollower() {
 		createBody("FOLLOWER");
+	}
+	
+	/** Create an immobile Rock on the middle
+	 */
+	public void createRock() {
+		repObject = new RepulsiveObject(
+			UUID.randomUUID(),
+			new Circle2f(0f, 0f, ROCK_SIZE),
+			new Point2f(100f, 100f),
+			1f,
+			1f		
+		);
+		repObject.setType("ROCK");
 	}
 
 	protected Point2f randomPosition() {
