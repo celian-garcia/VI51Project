@@ -221,9 +221,6 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 		object.setName(LocalizedString.getString(WorldModel.class, "ROCK", 1));
 		object.setType("ROCK");
 		addRepulsiveObject(object, randomPosition());
-//		System.out.println("------");
-//		System.out.println(object.getName());
-//		System.out.println("------");
 	}
 
 	protected Point2f randomPosition() {
