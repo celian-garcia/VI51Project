@@ -1,14 +1,9 @@
 package fr.utbm.info.vi51.framework.environment;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
-import fr.utbm.info.vi51.framework.math.MathUtil;
 import fr.utbm.info.vi51.framework.math.Point2f;
 import fr.utbm.info.vi51.framework.math.Shape2f;
-import fr.utbm.info.vi51.framework.math.Vector2f;
 
 public class RepulsiveObject extends AbstractSituatedObject {
 
@@ -18,8 +13,8 @@ public class RepulsiveObject extends AbstractSituatedObject {
 	private float kinematicStrength;
 	private float steeringStrength;
 	
-	private transient MotionInfluence motionInfluence = null;
-	private transient List<Influence> otherInfluences = new ArrayList<>();
+//	private transient MotionInfluence motionInfluence = null;
+//	private transient List<Influence> otherInfluences = new ArrayList<>();
 
 	/**
 	 * @param shape the shape of the body, considering that it is centered at the (0,0) position.
@@ -35,8 +30,8 @@ public class RepulsiveObject extends AbstractSituatedObject {
 	@Override
 	public RepulsiveObject clone() {
 		RepulsiveObject clone = (RepulsiveObject) super.clone();
-		clone.motionInfluence = null;
-		clone.otherInfluences = new ArrayList<>();
+//		clone.motionInfluence = null;
+//		clone.otherInfluences = new ArrayList<>();
 		return clone;
 	}
 	

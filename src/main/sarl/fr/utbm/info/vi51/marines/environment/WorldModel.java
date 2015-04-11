@@ -56,8 +56,6 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 	
 	private MouseTarget mouseTarget = null;
 	
-	private RepulsiveObject repObject;
-	
 	/**
 	 * @param width is the width of the world.
 	 * @param height is the height of the world.
@@ -86,11 +84,7 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 			// add mouse target in perceptions
 			if (this.mouseTarget!=null) {
 				allPercepts.add(new Percept(this.mouseTarget));
-			}
-			
-			// add repulsive Objects
-			allPercepts.add(new Percept(this.repObject));
-						
+			}			
 
 			float bestDistance = Float.MAX_VALUE;
 			AgentBody nearestBody = null;
@@ -175,9 +169,9 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 	@Override
 	public Iterable<? extends SituatedObject> getAllObjects() {
 		if (this.mouseTarget != null) {
-			return CollectionUtil.newIterable(getAgentBodies(), this.mouseTarget, this.repObject);
+			return CollectionUtil.newIterable(super.getAllObjects(), this.mouseTarget);
 		}
-		return CollectionUtil.newIterable(getAgentBodies(), this.repObject);
+		return super.getAllObjects();
 	}
 
 	@Override
@@ -217,14 +211,19 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 	/** Create an immobile Rock on the middle
 	 */
 	public void createRock() {
-		repObject = new RepulsiveObject(
+		RepulsiveObject object = new RepulsiveObject(
 			UUID.randomUUID(),
 			new Circle2f(0f, 0f, ROCK_SIZE),
 			new Point2f(100f, 100f),
 			1f,
 			1f		
 		);
-		repObject.setType("ROCK");
+		object.setName(LocalizedString.getString(WorldModel.class, "ROCK", 1));
+		object.setType("ROCK");
+		addRepulsiveObject(object, randomPosition());
+//		System.out.println("------");
+//		System.out.println(object.getName());
+//		System.out.println("------");
 	}
 
 	protected Point2f randomPosition() {

@@ -30,6 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import fr.utbm.info.vi51.framework.math.Point2f;
 import fr.utbm.info.vi51.framework.math.Vector2f;
 import fr.utbm.info.vi51.framework.time.TimeManager;
+import fr.utbm.info.vi51.framework.util.CollectionUtil;
 
 /**
  * Abstract implementation of a situated environment.  
@@ -40,6 +41,7 @@ import fr.utbm.info.vi51.framework.time.TimeManager;
 public abstract class AbstractEnvironment implements Environment {
 
 	private final Map<UUID,AgentBody> agentBodies = new TreeMap<UUID,AgentBody>();
+	private final Map<UUID,RepulsiveObject> repulsiveObjects = new TreeMap<UUID,RepulsiveObject>();
 	private final TimeManager timeManager;
 	private final float width;
 	private final float height;
@@ -135,6 +137,23 @@ public abstract class AbstractEnvironment implements Environment {
 		}
 	}
 	
+	/** Add a repulsive object.
+	 * This function could be call before the simulation is started.
+	 * 
+	 * @param object - the object.
+	 * @param position - the position of the body.
+	 * @param direction - the direction of the body.
+	 */
+	protected synchronized void addRepulsiveObject(RepulsiveObject object, Point2f position) {
+		if (this.init.get()) {
+			this.repulsiveObjects.put(object.getID(), object);
+			object.setPosition(position.getX(), position.getY());
+//			onAgentBodyCreated(body);
+		} else {
+			throw new IllegalStateException("You cannot call this function after the start of the simulation");
+		}
+	}
+	
 	/** Invoked when an agent body is created.
 	 * 
 	 * @param body the body.
@@ -162,6 +181,16 @@ public abstract class AbstractEnvironment implements Environment {
 	 */
 	public Iterable<AgentBody> getAgentBodies() {
 		return Collections.unmodifiableCollection(this.agentBodies.values());
+	}
+	
+	public Iterable<? extends SituatedObject> getAllObjects() {
+		Iterable<? extends SituatedObject> iterable = null;
+		
+		for (RepulsiveObject obj : Collections.unmodifiableCollection(this.repulsiveObjects.values()) ) {
+			iterable = CollectionUtil.newIterable(getAgentBodies(), obj);
+		}
+		
+		return iterable;
 	}
 	
 	@Override

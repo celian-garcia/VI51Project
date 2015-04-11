@@ -69,6 +69,7 @@ public class GUI extends AbstractFrameworkGUI {
 	private static final Icon CARROT_ICON;
 	private static final Icon LEADER_ICON;
 	private static final Icon FOLLOWER_ICON;
+	private static final Icon ROCK_ICON;
 	private static final int ICON_WIDTH;
 	private static final int ICON_HEIGHT;
 	
@@ -85,6 +86,9 @@ public class GUI extends AbstractFrameworkGUI {
 		url = Resources.getResource(GUI.class, "carrot.png"); //$NON-NLS-1$
 		assert(url!=null);
 		CARROT_ICON = new ImageIcon(url);
+		url = Resources.getResource(GUI.class, "rock.png"); //$NON-NLS-1$
+		assert(url!=null);
+		ROCK_ICON = new ImageIcon(url);
 		ICON_WIDTH = LEADER_ICON.getIconWidth();
 		ICON_HEIGHT = LEADER_ICON.getIconHeight();
 	}
@@ -227,7 +231,7 @@ public class GUI extends AbstractFrameworkGUI {
 		if ("TARGET".equals(type)) {
 			icon = CARROT_ICON;
 		} else if ("ROCK".equals(type)) {
-			icon = CARROT_ICON;
+			icon = ROCK_ICON;
 		}
 			
 		if (this.showIcons.isSelected() && icon != null) {
