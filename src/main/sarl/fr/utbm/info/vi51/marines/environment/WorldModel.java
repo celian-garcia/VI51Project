@@ -155,6 +155,14 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 //					}
 //				}
 				
+//				for (RepulsiveObject o : getRepulsiveObjects()) {
+//					Shape2f<?> shape = o.getShape();
+//					if (body1Bounds.intersects(shape)) {
+//						move.set(0,0);
+//						break;
+//					}
+//				}
+				
 				actions.add(new AnimatAction(body1, move, rotation));
 				
 			}

@@ -90,16 +90,18 @@ agent Leader extends AbstractAnimat {
 				target
 			)
 			
-//			var v = bo1.linear
-//
-//			for (obj:occurrence.perceptions) {
-//				if (obj.type == "ROCK") {
-//					var rv = obj.position.repulsiveVector(occurrence.body.position)
-//					v.add(rv)
-//				}
-//			}
-//
-//			bo1.linear = v
+			var v = bo1.linear
+
+			for (obj:occurrence.perceptions) {
+				if (obj.type == "ROCK") {
+					var rv = obj.position.repulsiveVector(occurrence.body.position)
+					v.add(rv)
+				}
+			}
+			
+			v.normalize
+			v.scale(occurrence.body.maxLinear)
+			bo1.linear = v
 			bo1.emitInfluence
 		}
 		else {
@@ -121,8 +123,8 @@ agent Leader extends AbstractAnimat {
 		var dist = v.length
 		v.normalize
 		
-		v.scale(300)
-		v.scale(1/(dist*dist*dist))
+		v.scale(100)
+		v.scale(1/(dist))
 		return v
 	}
 

@@ -70,6 +70,9 @@ public class MainProgram {
 		environment.createRock(200f, 200f);
 		environment.createRock(300f, 300f);
 		environment.createRock(400f, 400f);
+		environment.createRock(400f, 500f);
+		environment.createRock(500f, 400f);
+		environment.createRock(600f, 300f);
 		
 		FrameworkGUI gui = new GUI(WORLD_SIZE_X, WORLD_SIZE_Y, environment.getTimeManager(), formation);
 

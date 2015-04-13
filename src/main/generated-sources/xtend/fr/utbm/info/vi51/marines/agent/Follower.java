@@ -37,6 +37,7 @@ import io.sarl.lang.core.Percept;
 import io.sarl.lang.core.Scope;
 import io.sarl.lang.core.Space;
 import io.sarl.lang.core.SpaceID;
+import java.io.Serializable;
 import java.util.UUID;
 
 @SuppressWarnings("all")
@@ -112,6 +113,20 @@ public class Follower extends AbstractAnimat {
       float _currentLinearSpeed_1 = occurrence.body.getCurrentLinearSpeed();
       float _maxLinear_1 = this.getMaxLinear(occurrence.body);
       BehaviourOutput bo1 = this.seekBehaviour.runSeek(_position_1, _currentLinearSpeed_1, _maxLinear_1, position);
+      Vector2f v = bo1.getLinear();
+      for (final fr.utbm.info.vi51.framework.environment.Percept obj : occurrence.perceptions) {
+        Serializable _type = obj.getType();
+        boolean _equals = Objects.equal(_type, "ROCK");
+        if (_equals) {
+          Point2f _position_2 = obj.getPosition();
+          Point2f _position_3 = occurrence.body.getPosition();
+          Vector2f rv = this.repulsiveVector(_position_2, _position_3);
+          v.add(rv);
+        }
+      }
+      float _maxLinear_2 = this.getMaxLinear(occurrence.body);
+      v.scale(_maxLinear_2);
+      bo1.setLinear(v);
       Vector2f orientation = this.formationSlot.getGlobalOrientation();
       Vector2f _direction_1 = occurrence.body.getDirection();
       float _currentAngularSpeed_1 = occurrence.body.getCurrentAngularSpeed();
@@ -120,6 +135,16 @@ public class Follower extends AbstractAnimat {
       bo1.setAngular(_runAlign);
       this.emitInfluence(bo1);
     }
+  }
+  
+  public Vector2f repulsiveVector(final Point2f obj, final Point2f me) {
+    Vector2f v = new Vector2f();
+    v.sub(me, obj);
+    float dist = v.length();
+    v.normalize();
+    v.scale(200);
+    v.scale((1 / dist));
+    return v;
   }
   
   /**
