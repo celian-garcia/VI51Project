@@ -131,32 +131,15 @@ public class Leader extends AbstractAnimat {
         float _currentLinearSpeed = occurrence.body.getCurrentLinearSpeed();
         float _maxLinear = this.getMaxLinear(occurrence.body);
         BehaviourOutput bo1 = this.seekBehaviour.runSeek(_position_2, _currentLinearSpeed, _maxLinear, target);
-        Vector2f _linear = bo1.getLinear();
-        _linear.normalize();
-        Vector2f v = bo1.getLinear();
-        for (final fr.utbm.info.vi51.framework.environment.Percept obj : occurrence.perceptions) {
-          Serializable _type_1 = obj.getType();
-          boolean _equals_1 = Objects.equal(_type_1, "ROCK");
-          if (_equals_1) {
-            Point2f _position_3 = obj.getPosition();
-            Point2f _position_4 = occurrence.body.getPosition();
-            Vector2f rv = this.repulsiveVector(_position_3, _position_4);
-            v.add(rv);
-          }
-        }
-        v.normalize();
-        float _maxLinear_1 = this.getMaxLinear(occurrence.body);
-        v.scale(_maxLinear_1);
-        bo1.setLinear(v);
         this.emitInfluence(bo1);
       } else {
-        Point2f _position_5 = occurrence.body.getPosition();
+        Point2f _position_3 = occurrence.body.getPosition();
         Vector2f _direction_1 = occurrence.body.getDirection();
         float _currentLinearSpeed_1 = occurrence.body.getCurrentLinearSpeed();
-        float _maxLinear_2 = this.getMaxLinear(occurrence.body);
+        float _maxLinear_1 = this.getMaxLinear(occurrence.body);
         float _currentAngularSpeed = occurrence.body.getCurrentAngularSpeed();
         float _maxAngular = this.getMaxAngular(occurrence.body);
-        BehaviourOutput _runWander = this.wanderBehaviour.runWander(_position_5, _direction_1, _currentLinearSpeed_1, _maxLinear_2, _currentAngularSpeed, _maxAngular);
+        BehaviourOutput _runWander = this.wanderBehaviour.runWander(_position_3, _direction_1, _currentLinearSpeed_1, _maxLinear_1, _currentAngularSpeed, _maxAngular);
         this.emitInfluence(_runWander);
       }
     }
@@ -166,9 +149,9 @@ public class Leader extends AbstractAnimat {
     Vector2f v = new Vector2f();
     v.sub(me, obj);
     float dist = v.length();
-    this.println(Float.valueOf(dist));
     v.normalize();
-    v.scale((1 / dist));
+    v.scale(300);
+    v.scale((1 / ((dist * dist) * dist)));
     return v;
   }
   
