@@ -2,7 +2,7 @@ package fr.utbm.info.vi51.framework.environment;
 
 import java.util.UUID;
 
-import fr.utbm.info.vi51.framework.math.Point2f;
+//import fr.utbm.info.vi51.framework.math.Point2f;
 import fr.utbm.info.vi51.framework.math.Shape2f;
 
 public class RepulsiveObject extends AbstractSituatedObject {

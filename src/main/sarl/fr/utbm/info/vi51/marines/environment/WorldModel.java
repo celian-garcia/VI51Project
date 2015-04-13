@@ -36,7 +36,7 @@ import fr.utbm.info.vi51.framework.gui.WorldModelStateProvider;
 import fr.utbm.info.vi51.framework.math.Circle2f;
 import fr.utbm.info.vi51.framework.math.MathUtil;
 import fr.utbm.info.vi51.framework.math.Point2f;
-import fr.utbm.info.vi51.framework.math.Shape2f;
+//import fr.utbm.info.vi51.framework.math.Shape2f;
 import fr.utbm.info.vi51.framework.math.Vector2f;
 import fr.utbm.info.vi51.framework.time.StepTimeManager;
 import fr.utbm.info.vi51.framework.time.TimeManager;
@@ -140,9 +140,9 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 					rotation = computeKinematicRotation(body1, inf1.getAngularInfluence(), timeManager);
 				}
 				
-				Shape2f<?> body1Bounds = body1.getShape();
-				
-				// Trivial collision detection
+//				Shape2f<?> body1Bounds = body1.getShape();
+//				
+//				// Trivial collision detection
 //				for(int index2=index1+1; index2<influenceList.size(); index2++) {
 //					MotionInfluence inf2 = influenceList.get(index2);
 //					AgentBody body2 = getAgentBodyFor(inf2.getEmitter());

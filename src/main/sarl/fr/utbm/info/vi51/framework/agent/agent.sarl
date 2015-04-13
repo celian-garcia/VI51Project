@@ -6,8 +6,6 @@ import fr.utbm.info.vi51.framework.environment.StopSimulation
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import java.util.UUID
-import fr.utbm.info.vi51.framework.math.Point2f
-import fr.utbm.info.vi51.framework.math.Vector2f
 
 agent AbstractAnimat {
 	
