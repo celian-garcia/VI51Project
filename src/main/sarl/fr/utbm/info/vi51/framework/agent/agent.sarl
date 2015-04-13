@@ -6,6 +6,8 @@ import fr.utbm.info.vi51.framework.environment.StopSimulation
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import java.util.UUID
+import fr.utbm.info.vi51.framework.math.Point2f
+import fr.utbm.info.vi51.framework.math.Vector2f
 
 agent AbstractAnimat {
 	
@@ -40,6 +42,17 @@ agent AbstractAnimat {
 	
 	on StopSimulation {
 		killMe
+	}
+	
+	def repulsiveVector(obj:Point2f, me:Point2f):Vector2f {
+		var v = new Vector2f
+		v.sub(me, obj)
+		var dist = v.length
+		v.normalize
+		
+		v.scale(150)
+		v.scale(1/(dist))
+		return v
 	}
 
 }

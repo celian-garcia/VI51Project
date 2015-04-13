@@ -124,6 +124,7 @@ public class Follower extends AbstractAnimat {
           v.add(rv);
         }
       }
+      v.normalize();
       float _maxLinear_2 = this.getMaxLinear(occurrence.body);
       v.scale(_maxLinear_2);
       bo1.setLinear(v);
@@ -135,16 +136,6 @@ public class Follower extends AbstractAnimat {
       bo1.setAngular(_runAlign);
       this.emitInfluence(bo1);
     }
-  }
-  
-  public Vector2f repulsiveVector(final Point2f obj, final Point2f me) {
-    Vector2f v = new Vector2f();
-    v.sub(me, obj);
-    float dist = v.length();
-    v.normalize();
-    v.scale(200);
-    v.scale((1 / dist));
-    return v;
   }
   
   /**

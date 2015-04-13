@@ -40,9 +40,9 @@ import fr.utbm.info.vi51.marines.gui.GUI;
  */
 public class MainProgram {
 
-	private static float WORLD_SIZE_X = 700;
+	private static float WORLD_SIZE_X = 1400;
 	private static float WORLD_SIZE_Y = 700;
-	private static int SLOT_COUNT = 7;
+	private static int SLOT_COUNT = 10;
 	
 	/** Main program.
 	 * 
@@ -64,6 +64,12 @@ public class MainProgram {
 		WorldModel environment = new WorldModel(WORLD_SIZE_X, WORLD_SIZE_Y);
 		
 		environment.createLeader();
+		environment.createFollower();
+		environment.createFollower();
+		environment.createFollower();
+		environment.createFollower();
+		environment.createFollower();
+		environment.createFollower();
 		environment.createFollower();
 		environment.createFollower();
 		environment.createFollower();

@@ -22,8 +22,6 @@ import fr.utbm.info.vi51.marines.formation.FormationSlot
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
-import fr.utbm.info.vi51.framework.math.Point2f
-import fr.utbm.info.vi51.framework.math.Vector2f
 
 agent Follower extends AbstractAnimat {
 	
@@ -92,7 +90,8 @@ agent Follower extends AbstractAnimat {
 					v.add(rv)
 				}
 			}
-
+			
+			v.normalize
 			v.scale(occurrence.body.maxLinear)
 			bo1.linear = v
 			
@@ -107,15 +106,6 @@ agent Follower extends AbstractAnimat {
 		}
 	}
 	
-	def repulsiveVector(obj:Point2f, me:Point2f):Vector2f {
-		var v = new Vector2f
-		v.sub(me, obj)
-		var dist = v.length
-		v.normalize
-		
-		v.scale(200)
-		v.scale(1/(dist))
-		return v
-	}
+	
 
 }

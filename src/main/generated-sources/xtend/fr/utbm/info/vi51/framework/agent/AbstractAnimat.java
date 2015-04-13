@@ -6,6 +6,7 @@ import fr.utbm.info.vi51.framework.agent.PhysicEnvironment;
 import fr.utbm.info.vi51.framework.agent.StandardPhysicEnvironment;
 import fr.utbm.info.vi51.framework.environment.DynamicType;
 import fr.utbm.info.vi51.framework.environment.StopSimulation;
+import fr.utbm.info.vi51.framework.math.Point2f;
 import fr.utbm.info.vi51.framework.math.Vector2f;
 import io.sarl.core.AgentKilled;
 import io.sarl.core.AgentSpawned;
@@ -78,6 +79,16 @@ public class AbstractAnimat extends Agent {
   @Percept
   public void _handle_StopSimulation_1(final StopSimulation occurrence) {
     this.killMe();
+  }
+  
+  public Vector2f repulsiveVector(final Point2f obj, final Point2f me) {
+    Vector2f v = new Vector2f();
+    v.sub(me, obj);
+    float dist = v.length();
+    v.normalize();
+    v.scale(150);
+    v.scale((1 / dist));
+    return v;
   }
   
   /**
