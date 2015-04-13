@@ -183,11 +183,16 @@ public abstract class AbstractEnvironment implements Environment {
 		return Collections.unmodifiableCollection(this.agentBodies.values());
 	}
 	
+
+	public Iterable<RepulsiveObject> getRepulsiveObjects() {
+		return Collections.unmodifiableCollection(this.repulsiveObjects.values());
+	}
+	
 	public Iterable<? extends SituatedObject> getAllObjects() {
-		Iterable<? extends SituatedObject> iterable = null;
+		Iterable<? extends SituatedObject> iterable = getAgentBodies();
 		
-		for (RepulsiveObject obj : Collections.unmodifiableCollection(this.repulsiveObjects.values()) ) {
-			iterable = CollectionUtil.newIterable(getAgentBodies(), obj);
+		for (RepulsiveObject obj : getRepulsiveObjects() ) {
+			iterable = CollectionUtil.newIterable(iterable, obj);
 		}
 		
 		return iterable;
@@ -196,6 +201,10 @@ public abstract class AbstractEnvironment implements Environment {
 	@Override
 	public int getAgentBodyNumber() {
 		return this.agentBodies.size();
+	}
+	
+	public int getRepulsiveObjectNumber() {
+		return this.repulsiveObjects.size();
 	}
 
 	/**

@@ -1,7 +1,6 @@
 package fr.utbm.info.vi51.marines.agent;
 
 import com.google.common.base.Objects;
-
 import fr.utbm.info.vi51.framework.agent.AbstractAnimat;
 import fr.utbm.info.vi51.framework.agent.BehaviourOutput;
 import fr.utbm.info.vi51.framework.environment.DynamicType;
@@ -38,7 +37,6 @@ import io.sarl.lang.core.Percept;
 import io.sarl.lang.core.Scope;
 import io.sarl.lang.core.Space;
 import io.sarl.lang.core.SpaceID;
-
 import java.util.UUID;
 
 @SuppressWarnings("all")

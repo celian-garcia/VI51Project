@@ -20,8 +20,8 @@ public class RepulsiveObject extends AbstractSituatedObject {
 	 * @param shape the shape of the body, considering that it is centered at the (0,0) position.
 	 * @param position is the position of the object.
 	 */
-	public RepulsiveObject(UUID id, Shape2f<?> shape, Point2f position, float k_strength, float s_strength) {
-		super(shape, position);
+	public RepulsiveObject(UUID id, Shape2f<?> shape, float k_strength, float s_strength) {
+		super(shape);
 		this.id = id;
 		this.kinematicStrength = k_strength;
 		this.kinematicStrength = s_strength;

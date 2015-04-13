@@ -1,7 +1,6 @@
 package fr.utbm.info.vi51.marines.agent;
 
 import com.google.common.base.Objects;
-
 import fr.utbm.info.vi51.framework.agent.AbstractAnimat;
 import fr.utbm.info.vi51.framework.agent.BehaviourOutput;
 import fr.utbm.info.vi51.framework.environment.DynamicType;
@@ -22,6 +21,7 @@ import fr.utbm.info.vi51.marines.formation.Formation;
 import io.sarl.core.AgentSpawned;
 import io.sarl.core.DefaultContextInteractions;
 import io.sarl.core.Initialize;
+import io.sarl.core.Logging;
 import io.sarl.lang.annotation.FiredEvent;
 import io.sarl.lang.annotation.Generated;
 import io.sarl.lang.annotation.ImportedCapacityFeature;
@@ -34,7 +34,6 @@ import io.sarl.lang.core.Percept;
 import io.sarl.lang.core.Scope;
 import io.sarl.lang.core.Space;
 import io.sarl.lang.core.SpaceID;
-
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -131,19 +130,46 @@ public class Leader extends AbstractAnimat {
         Point2f _position_2 = occurrence.body.getPosition();
         float _currentLinearSpeed = occurrence.body.getCurrentLinearSpeed();
         float _maxLinear = this.getMaxLinear(occurrence.body);
-        BehaviourOutput _runSeek = this.seekBehaviour.runSeek(_position_2, _currentLinearSpeed, _maxLinear, target);
-        this.emitInfluence(_runSeek);
+        BehaviourOutput bo1 = this.seekBehaviour.runSeek(_position_2, _currentLinearSpeed, _maxLinear, target);
+        Vector2f _linear = bo1.getLinear();
+        _linear.normalize();
+        Vector2f v = bo1.getLinear();
+        for (final fr.utbm.info.vi51.framework.environment.Percept obj : occurrence.perceptions) {
+          Serializable _type_1 = obj.getType();
+          boolean _equals_1 = Objects.equal(_type_1, "ROCK");
+          if (_equals_1) {
+            Point2f _position_3 = obj.getPosition();
+            Point2f _position_4 = occurrence.body.getPosition();
+            Vector2f rv = this.repulsiveVector(_position_3, _position_4);
+            v.add(rv);
+          }
+        }
+        v.normalize();
+        float _maxLinear_1 = this.getMaxLinear(occurrence.body);
+        v.scale(_maxLinear_1);
+        bo1.setLinear(v);
+        this.emitInfluence(bo1);
       } else {
-        Point2f _position_3 = occurrence.body.getPosition();
+        Point2f _position_5 = occurrence.body.getPosition();
         Vector2f _direction_1 = occurrence.body.getDirection();
         float _currentLinearSpeed_1 = occurrence.body.getCurrentLinearSpeed();
-        float _maxLinear_1 = this.getMaxLinear(occurrence.body);
+        float _maxLinear_2 = this.getMaxLinear(occurrence.body);
         float _currentAngularSpeed = occurrence.body.getCurrentAngularSpeed();
         float _maxAngular = this.getMaxAngular(occurrence.body);
-        BehaviourOutput _runWander = this.wanderBehaviour.runWander(_position_3, _direction_1, _currentLinearSpeed_1, _maxLinear_1, _currentAngularSpeed, _maxAngular);
+        BehaviourOutput _runWander = this.wanderBehaviour.runWander(_position_5, _direction_1, _currentLinearSpeed_1, _maxLinear_2, _currentAngularSpeed, _maxAngular);
         this.emitInfluence(_runWander);
       }
     }
+  }
+  
+  public Vector2f repulsiveVector(final Point2f obj, final Point2f me) {
+    Vector2f v = new Vector2f();
+    v.sub(me, obj);
+    float dist = v.length();
+    this.println(Float.valueOf(dist));
+    v.normalize();
+    v.scale((1 / dist));
+    return v;
   }
   
   /**
@@ -288,6 +314,160 @@ public class Leader extends AbstractAnimat {
   @ImportedCapacityFeature(DefaultContextInteractions.class)
   protected UUID spawn(final Class<? extends Agent> aAgent, final Object... params) {
     return getSkill(io.sarl.core.DefaultContextInteractions.class).spawn(aAgent, params);
+  }
+  
+  /**
+   * See the capacity {@link io.sarl.core.Logging#debug(java.lang.Object)}.
+   * 
+   * @see io.sarl.core.Logging#debug(java.lang.Object)
+   */
+  @Generated
+  @ImportedCapacityFeature(Logging.class)
+  protected void debug(final Object message) {
+    getSkill(io.sarl.core.Logging.class).debug(message);
+  }
+  
+  /**
+   * See the capacity {@link io.sarl.core.Logging#error(java.lang.Object)}.
+   * 
+   * @see io.sarl.core.Logging#error(java.lang.Object)
+   */
+  @Generated
+  @ImportedCapacityFeature(Logging.class)
+  protected void error(final Object message) {
+    getSkill(io.sarl.core.Logging.class).error(message);
+  }
+  
+  /**
+   * See the capacity {@link io.sarl.core.Logging#error(java.lang.Object,java.lang.Throwable)}.
+   * 
+   * @see io.sarl.core.Logging#error(java.lang.Object,java.lang.Throwable)
+   */
+  @Generated
+  @ImportedCapacityFeature(Logging.class)
+  protected void error(final Object message, final Throwable exception) {
+    getSkill(io.sarl.core.Logging.class).error(message, exception);
+  }
+  
+  /**
+   * See the capacity {@link io.sarl.core.Logging#getLogLevel()}.
+   * 
+   * @see io.sarl.core.Logging#getLogLevel()
+   */
+  @Generated
+  @ImportedCapacityFeature(Logging.class)
+  protected int getLogLevel() {
+    return getSkill(io.sarl.core.Logging.class).getLogLevel();
+  }
+  
+  /**
+   * See the capacity {@link io.sarl.core.Logging#info(java.lang.Object)}.
+   * 
+   * @see io.sarl.core.Logging#info(java.lang.Object)
+   */
+  @Generated
+  @ImportedCapacityFeature(Logging.class)
+  protected void info(final Object message) {
+    getSkill(io.sarl.core.Logging.class).info(message);
+  }
+  
+  /**
+   * See the capacity {@link io.sarl.core.Logging#isDebugLogEnabled()}.
+   * 
+   * @see io.sarl.core.Logging#isDebugLogEnabled()
+   */
+  @Generated
+  @ImportedCapacityFeature(Logging.class)
+  protected boolean isDebugLogEnabled() {
+    return getSkill(io.sarl.core.Logging.class).isDebugLogEnabled();
+  }
+  
+  /**
+   * See the capacity {@link io.sarl.core.Logging#isErrorLogEnabled()}.
+   * 
+   * @see io.sarl.core.Logging#isErrorLogEnabled()
+   */
+  @Generated
+  @ImportedCapacityFeature(Logging.class)
+  protected boolean isErrorLogEnabled() {
+    return getSkill(io.sarl.core.Logging.class).isErrorLogEnabled();
+  }
+  
+  /**
+   * See the capacity {@link io.sarl.core.Logging#isInfoLogEnabled()}.
+   * 
+   * @see io.sarl.core.Logging#isInfoLogEnabled()
+   */
+  @Generated
+  @ImportedCapacityFeature(Logging.class)
+  protected boolean isInfoLogEnabled() {
+    return getSkill(io.sarl.core.Logging.class).isInfoLogEnabled();
+  }
+  
+  /**
+   * See the capacity {@link io.sarl.core.Logging#isWarningLogEnabled()}.
+   * 
+   * @see io.sarl.core.Logging#isWarningLogEnabled()
+   */
+  @Generated
+  @ImportedCapacityFeature(Logging.class)
+  protected boolean isWarningLogEnabled() {
+    return getSkill(io.sarl.core.Logging.class).isWarningLogEnabled();
+  }
+  
+  /**
+   * See the capacity {@link io.sarl.core.Logging#println(java.lang.Object)}.
+   * 
+   * @see io.sarl.core.Logging#println(java.lang.Object)
+   */
+  @Generated
+  @ImportedCapacityFeature(Logging.class)
+  protected void println(final Object message) {
+    getSkill(io.sarl.core.Logging.class).println(message);
+  }
+  
+  /**
+   * See the capacity {@link io.sarl.core.Logging#setLogLevel(int)}.
+   * 
+   * @see io.sarl.core.Logging#setLogLevel(int)
+   */
+  @Generated
+  @ImportedCapacityFeature(Logging.class)
+  protected void setLogLevel(final int level) {
+    getSkill(io.sarl.core.Logging.class).setLogLevel(level);
+  }
+  
+  /**
+   * See the capacity {@link io.sarl.core.Logging#setLoggingName(java.lang.String)}.
+   * 
+   * @see io.sarl.core.Logging#setLoggingName(java.lang.String)
+   */
+  @Generated
+  @ImportedCapacityFeature(Logging.class)
+  protected void setLoggingName(final String message) {
+    getSkill(io.sarl.core.Logging.class).setLoggingName(message);
+  }
+  
+  /**
+   * See the capacity {@link io.sarl.core.Logging#warning(java.lang.Object)}.
+   * 
+   * @see io.sarl.core.Logging#warning(java.lang.Object)
+   */
+  @Generated
+  @ImportedCapacityFeature(Logging.class)
+  protected void warning(final Object message) {
+    getSkill(io.sarl.core.Logging.class).warning(message);
+  }
+  
+  /**
+   * See the capacity {@link io.sarl.core.Logging#warning(java.lang.Object,java.lang.Throwable)}.
+   * 
+   * @see io.sarl.core.Logging#warning(java.lang.Object,java.lang.Throwable)
+   */
+  @Generated
+  @ImportedCapacityFeature(Logging.class)
+  protected void warning(final Object message, final Throwable exception) {
+    getSkill(io.sarl.core.Logging.class).warning(message, exception);
   }
   
   /**

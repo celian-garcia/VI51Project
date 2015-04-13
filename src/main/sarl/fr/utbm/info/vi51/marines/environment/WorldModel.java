@@ -89,6 +89,7 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 			float bestDistance = Float.MAX_VALUE;
 			AgentBody nearestBody = null;
 			
+			// add nearest agent body
 			for(AgentBody b1 : getAgentBodies()) {
 				if (b1!=agent) {
 					float x2 = b1.getX();
@@ -103,6 +104,11 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 			
 			if (nearestBody!=null) {
 				allPercepts.add(new Percept(nearestBody));
+			}
+			
+			// add all repulsive objects
+			for (RepulsiveObject obj : getRepulsiveObjects()) {
+				allPercepts.add(new Percept(obj));
 			}
 		}
 		
@@ -137,17 +143,17 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 				Shape2f<?> body1Bounds = body1.getShape();
 				
 				// Trivial collision detection
-				for(int index2=index1+1; index2<influenceList.size(); index2++) {
-					MotionInfluence inf2 = influenceList.get(index2);
-					AgentBody body2 = getAgentBodyFor(inf2.getEmitter());
-					if (body2!=null) {
-						Shape2f<?> body2Bounds = body2.getShape();
-						if (body1Bounds.intersects(body2Bounds)) {
-							move.set(0,0);
-							break;
-						}
-					}
-				}
+//				for(int index2=index1+1; index2<influenceList.size(); index2++) {
+//					MotionInfluence inf2 = influenceList.get(index2);
+//					AgentBody body2 = getAgentBodyFor(inf2.getEmitter());
+//					if (body2!=null) {
+//						Shape2f<?> body2Bounds = body2.getShape();
+//						if (body1Bounds.intersects(body2Bounds)) {
+//							move.set(0,0);
+//							break;
+//						}
+//					}
+//				}
 				
 				actions.add(new AnimatAction(body1, move, rotation));
 				
@@ -208,19 +214,18 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 		createBody("FOLLOWER");
 	}
 	
-	/** Create an immobile Rock on the middle
+	/** Create an static Rock at the position given in parameter
 	 */
-	public void createRock() {
+	public void createRock(float x, float y) {
 		RepulsiveObject object = new RepulsiveObject(
 			UUID.randomUUID(),
 			new Circle2f(0f, 0f, ROCK_SIZE),
-			new Point2f(100f, 100f),
 			1f,
 			1f		
 		);
-		object.setName(LocalizedString.getString(WorldModel.class, "ROCK", 1));
+		object.setName(LocalizedString.getString(WorldModel.class, "ROCK", getRepulsiveObjectNumber() + 1));
 		object.setType("ROCK");
-		addRepulsiveObject(object, randomPosition());
+		addRepulsiveObject(object, new Point2f(x, y));
 	}
 
 	protected Point2f randomPosition() {
