@@ -82,7 +82,28 @@ agent Follower extends AbstractAnimat {
 				occurrence.body.currentLinearSpeed,
 				occurrence.body.maxLinear,
 				position)
-	
+			
+			var v = bo1.linear 
+			v.normalize
+			
+			for (obj:occurrence.perceptions) {
+				if (obj.type == "ROCK") {
+
+					var dmin = computeDistanceMin(
+						obj.position, obj.shape.bounds,
+						occurrence.body.position,
+						occurrence.body.shape.bounds
+					)
+
+					var rv = obj.position.repulsiveVector(occurrence.body.position, dmin)
+					v.add(rv)
+				}
+			}
+			
+			v.normalize
+			v.scale(occurrence.body.maxLinear)
+			bo1.linear = v
+			
 			var orientation = this.formationSlot.globalOrientation
 			bo1.angular = this.alignBehaviour.runAlign(
 				occurrence.body.direction,
@@ -93,5 +114,7 @@ agent Follower extends AbstractAnimat {
 			bo1.emitInfluence
 		}
 	}
+	
+	
 
 }

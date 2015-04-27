@@ -30,12 +30,13 @@ import fr.utbm.info.vi51.framework.environment.DynamicType;
 import fr.utbm.info.vi51.framework.environment.Influence;
 import fr.utbm.info.vi51.framework.environment.MotionInfluence;
 import fr.utbm.info.vi51.framework.environment.Percept;
+import fr.utbm.info.vi51.framework.environment.RepulsiveObject;
 import fr.utbm.info.vi51.framework.environment.SituatedObject;
 import fr.utbm.info.vi51.framework.gui.WorldModelStateProvider;
 import fr.utbm.info.vi51.framework.math.Circle2f;
 import fr.utbm.info.vi51.framework.math.MathUtil;
 import fr.utbm.info.vi51.framework.math.Point2f;
-import fr.utbm.info.vi51.framework.math.Shape2f;
+//import fr.utbm.info.vi51.framework.math.Shape2f;
 import fr.utbm.info.vi51.framework.math.Vector2f;
 import fr.utbm.info.vi51.framework.time.StepTimeManager;
 import fr.utbm.info.vi51.framework.time.TimeManager;
@@ -51,6 +52,7 @@ import fr.utbm.info.vi51.framework.util.LocalizedString;
 public class WorldModel extends AbstractEnvironment implements WorldModelStateProvider {
 
 	private final static float RABBIT_SIZE = 20f;
+	private final static float ROCK_SIZE = 20f;
 	
 	private MouseTarget mouseTarget = null;
 	
@@ -82,11 +84,12 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 			// add mouse target in perceptions
 			if (this.mouseTarget!=null) {
 				allPercepts.add(new Percept(this.mouseTarget));
-			}
+			}			
 
 			float bestDistance = Float.MAX_VALUE;
 			AgentBody nearestBody = null;
 			
+			// add nearest agent body
 			for(AgentBody b1 : getAgentBodies()) {
 				if (b1!=agent) {
 					float x2 = b1.getX();
@@ -101,6 +104,11 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 			
 			if (nearestBody!=null) {
 				allPercepts.add(new Percept(nearestBody));
+			}
+			
+			// add all repulsive objects
+			for (RepulsiveObject obj : getRepulsiveObjects()) {
+				allPercepts.add(new Percept(obj));
 			}
 		}
 		
@@ -132,20 +140,28 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 					rotation = computeKinematicRotation(body1, inf1.getAngularInfluence(), timeManager);
 				}
 				
-				Shape2f<?> body1Bounds = body1.getShape();
+//				Shape2f<?> body1Bounds = body1.getShape();
+//				
+//				// Trivial collision detection
+//				for(int index2=index1+1; index2<influenceList.size(); index2++) {
+//					MotionInfluence inf2 = influenceList.get(index2);
+//					AgentBody body2 = getAgentBodyFor(inf2.getEmitter());
+//					if (body2!=null) {
+//						Shape2f<?> body2Bounds = body2.getShape();
+//						if (body1Bounds.intersects(body2Bounds)) {
+//							move.set(0,0);
+//							break;
+//						}
+//					}
+//				}
 				
-				// Trivial collision detection
-				for(int index2=index1+1; index2<influenceList.size(); index2++) {
-					MotionInfluence inf2 = influenceList.get(index2);
-					AgentBody body2 = getAgentBodyFor(inf2.getEmitter());
-					if (body2!=null) {
-						Shape2f<?> body2Bounds = body2.getShape();
-						if (body1Bounds.intersects(body2Bounds)) {
-							move.set(0,0);
-							break;
-						}
-					}
-				}
+//				for (RepulsiveObject o : getRepulsiveObjects()) {
+//					Shape2f<?> shape = o.getShape();
+//					if (body1Bounds.intersects(shape)) {
+//						move.set(0,0);
+//						break;
+//					}
+//				}
 				
 				actions.add(new AnimatAction(body1, move, rotation));
 				
@@ -167,9 +183,9 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 	@Override
 	public Iterable<? extends SituatedObject> getAllObjects() {
 		if (this.mouseTarget != null) {
-			return CollectionUtil.newIterable(getAgentBodies(), this.mouseTarget);
+			return CollectionUtil.newIterable(super.getAllObjects(), this.mouseTarget);
 		}
-		return getAgentBodies();
+		return super.getAllObjects();
 	}
 
 	@Override
@@ -204,6 +220,20 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 	 */
 	public void createFollower() {
 		createBody("FOLLOWER");
+	}
+	
+	/** Create an static Rock at the position given in parameter
+	 */
+	public void createRock(float x, float y) {
+		RepulsiveObject object = new RepulsiveObject(
+			UUID.randomUUID(),
+			new Circle2f(0f, 0f, ROCK_SIZE),
+			1f,
+			1f		
+		);
+		object.setName(LocalizedString.getString(WorldModel.class, "ROCK", getRepulsiveObjectNumber() + 1));
+		object.setType("ROCK");
+		addRepulsiveObject(object, new Point2f(x, y));
 	}
 
 	protected Point2f randomPosition() {

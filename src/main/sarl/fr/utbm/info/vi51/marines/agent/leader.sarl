@@ -80,12 +80,34 @@ agent Leader extends AbstractAnimat {
 			var target = firstPercept.position.clone
 
 			// run the seek behaviour
-			this.seekBehaviour.runSeek(
+			var bo1 = this.seekBehaviour.runSeek(
 				occurrence.body.position,
 				occurrence.body.currentLinearSpeed,
 				occurrence.body.maxLinear,
 				target
-			).emitInfluence
+			)
+			
+			var v = bo1.linear
+			v.normalize
+
+			for (obj:occurrence.perceptions) {
+				if (obj.type == "ROCK") {
+
+					var dmin = computeDistanceMin(
+						obj.position, obj.shape.bounds,
+						occurrence.body.position,
+						occurrence.body.shape.bounds
+					)
+
+					var rv = obj.position.repulsiveVector(occurrence.body.position, dmin)
+					v.add(rv)
+				}
+			}
+
+			v.normalize
+			v.scale(occurrence.body.maxLinear)
+			bo1.linear = v
+			bo1.emitInfluence
 		}
 		else {
 			// run the wander behaviour

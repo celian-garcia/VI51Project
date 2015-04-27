@@ -1,7 +1,6 @@
 package fr.utbm.info.vi51.marines.agent;
 
 import com.google.common.base.Objects;
-
 import fr.utbm.info.vi51.framework.agent.AbstractAnimat;
 import fr.utbm.info.vi51.framework.agent.BehaviourOutput;
 import fr.utbm.info.vi51.framework.environment.DynamicType;
@@ -9,6 +8,8 @@ import fr.utbm.info.vi51.framework.environment.PerceptionEvent;
 import fr.utbm.info.vi51.framework.environment.SimulationAgentReady;
 import fr.utbm.info.vi51.framework.math.MathUtil;
 import fr.utbm.info.vi51.framework.math.Point2f;
+import fr.utbm.info.vi51.framework.math.Rectangle2f;
+import fr.utbm.info.vi51.framework.math.Shape2f;
 import fr.utbm.info.vi51.framework.math.Vector2f;
 import fr.utbm.info.vi51.marines.behavior.SeekBehaviour;
 import fr.utbm.info.vi51.marines.behavior.WanderBehaviour;
@@ -34,7 +35,6 @@ import io.sarl.lang.core.Percept;
 import io.sarl.lang.core.Scope;
 import io.sarl.lang.core.Space;
 import io.sarl.lang.core.SpaceID;
-
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -131,16 +131,39 @@ public class Leader extends AbstractAnimat {
         Point2f _position_2 = occurrence.body.getPosition();
         float _currentLinearSpeed = occurrence.body.getCurrentLinearSpeed();
         float _maxLinear = this.getMaxLinear(occurrence.body);
-        BehaviourOutput _runSeek = this.seekBehaviour.runSeek(_position_2, _currentLinearSpeed, _maxLinear, target);
-        this.emitInfluence(_runSeek);
+        BehaviourOutput bo1 = this.seekBehaviour.runSeek(_position_2, _currentLinearSpeed, _maxLinear, target);
+        Vector2f v = bo1.getLinear();
+        v.normalize();
+        for (final fr.utbm.info.vi51.framework.environment.Percept obj : occurrence.perceptions) {
+          Serializable _type_1 = obj.getType();
+          boolean _equals_1 = Objects.equal(_type_1, "ROCK");
+          if (_equals_1) {
+            Point2f _position_3 = obj.getPosition();
+            Shape2f<?> _shape = obj.getShape();
+            Rectangle2f _bounds = _shape.getBounds();
+            Point2f _position_4 = occurrence.body.getPosition();
+            Shape2f<?> _shape_1 = occurrence.body.getShape();
+            Rectangle2f _bounds_1 = _shape_1.getBounds();
+            float dmin = this.computeDistanceMin(_position_3, _bounds, _position_4, _bounds_1);
+            Point2f _position_5 = obj.getPosition();
+            Point2f _position_6 = occurrence.body.getPosition();
+            Vector2f rv = this.repulsiveVector(_position_5, _position_6, dmin);
+            v.add(rv);
+          }
+        }
+        v.normalize();
+        float _maxLinear_1 = this.getMaxLinear(occurrence.body);
+        v.scale(_maxLinear_1);
+        bo1.setLinear(v);
+        this.emitInfluence(bo1);
       } else {
-        Point2f _position_3 = occurrence.body.getPosition();
+        Point2f _position_7 = occurrence.body.getPosition();
         Vector2f _direction_1 = occurrence.body.getDirection();
         float _currentLinearSpeed_1 = occurrence.body.getCurrentLinearSpeed();
-        float _maxLinear_1 = this.getMaxLinear(occurrence.body);
+        float _maxLinear_2 = this.getMaxLinear(occurrence.body);
         float _currentAngularSpeed = occurrence.body.getCurrentAngularSpeed();
         float _maxAngular = this.getMaxAngular(occurrence.body);
-        BehaviourOutput _runWander = this.wanderBehaviour.runWander(_position_3, _direction_1, _currentLinearSpeed_1, _maxLinear_1, _currentAngularSpeed, _maxAngular);
+        BehaviourOutput _runWander = this.wanderBehaviour.runWander(_position_7, _direction_1, _currentLinearSpeed_1, _maxLinear_2, _currentAngularSpeed, _maxAngular);
         this.emitInfluence(_runWander);
       }
     }
