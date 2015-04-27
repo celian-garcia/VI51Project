@@ -8,6 +8,8 @@ import fr.utbm.info.vi51.framework.environment.PerceptionEvent;
 import fr.utbm.info.vi51.framework.environment.SimulationAgentReady;
 import fr.utbm.info.vi51.framework.math.MathUtil;
 import fr.utbm.info.vi51.framework.math.Point2f;
+import fr.utbm.info.vi51.framework.math.Rectangle2f;
+import fr.utbm.info.vi51.framework.math.Shape2f;
 import fr.utbm.info.vi51.framework.math.Vector2f;
 import fr.utbm.info.vi51.marines.behavior.AlignBehaviour;
 import fr.utbm.info.vi51.marines.behavior.SeekBehaviour;
@@ -114,13 +116,21 @@ public class Follower extends AbstractAnimat {
       float _maxLinear_1 = this.getMaxLinear(occurrence.body);
       BehaviourOutput bo1 = this.seekBehaviour.runSeek(_position_1, _currentLinearSpeed_1, _maxLinear_1, position);
       Vector2f v = bo1.getLinear();
+      v.normalize();
       for (final fr.utbm.info.vi51.framework.environment.Percept obj : occurrence.perceptions) {
         Serializable _type = obj.getType();
         boolean _equals = Objects.equal(_type, "ROCK");
         if (_equals) {
           Point2f _position_2 = obj.getPosition();
+          Shape2f<?> _shape = obj.getShape();
+          Rectangle2f _bounds = _shape.getBounds();
           Point2f _position_3 = occurrence.body.getPosition();
-          Vector2f rv = this.repulsiveVector(_position_2, _position_3);
+          Shape2f<?> _shape_1 = occurrence.body.getShape();
+          Rectangle2f _bounds_1 = _shape_1.getBounds();
+          float dmin = this.computeDistanceMin(_position_2, _bounds, _position_3, _bounds_1);
+          Point2f _position_4 = obj.getPosition();
+          Point2f _position_5 = occurrence.body.getPosition();
+          Vector2f rv = this.repulsiveVector(_position_4, _position_5, dmin);
           v.add(rv);
         }
       }

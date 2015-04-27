@@ -8,6 +8,7 @@ import io.sarl.core.Lifecycle
 import java.util.UUID
 import fr.utbm.info.vi51.framework.math.Point2f
 import fr.utbm.info.vi51.framework.math.Vector2f
+import fr.utbm.info.vi51.framework.math.Rectangle2f
 
 agent AbstractAnimat {
 	
@@ -44,15 +45,21 @@ agent AbstractAnimat {
 		killMe
 	}
 	
-	def repulsiveVector(obj:Point2f, me:Point2f):Vector2f {
+	def repulsiveVector(obj:Point2f, me:Point2f, s:float):Vector2f {
 		var v = new Vector2f
 		v.sub(me, obj)
 		var dist = v.length
 		v.normalize
-		
-		v.scale(150)
-		v.scale(1/(dist))
+
+		v.scale((s*s*s)/(dist*dist*dist))
 		return v
+	}
+	
+	def computeDistanceMin(obj:Point2f, objb:Rectangle2f, me:Point2f, meb:Rectangle2f): float {
+		var objr = (objb.upper.x - objb.lower.x)/2;
+		var mer  = (meb.upper.x - meb.lower.x)/2;
+		
+		return objr + mer;
 	}
 
 }

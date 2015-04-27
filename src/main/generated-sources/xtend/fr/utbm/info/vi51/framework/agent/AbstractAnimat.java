@@ -7,6 +7,7 @@ import fr.utbm.info.vi51.framework.agent.StandardPhysicEnvironment;
 import fr.utbm.info.vi51.framework.environment.DynamicType;
 import fr.utbm.info.vi51.framework.environment.StopSimulation;
 import fr.utbm.info.vi51.framework.math.Point2f;
+import fr.utbm.info.vi51.framework.math.Rectangle2f;
 import fr.utbm.info.vi51.framework.math.Vector2f;
 import io.sarl.core.AgentKilled;
 import io.sarl.core.AgentSpawned;
@@ -81,14 +82,29 @@ public class AbstractAnimat extends Agent {
     this.killMe();
   }
   
-  public Vector2f repulsiveVector(final Point2f obj, final Point2f me) {
+  public Vector2f repulsiveVector(final Point2f obj, final Point2f me, final float s) {
     Vector2f v = new Vector2f();
     v.sub(me, obj);
     float dist = v.length();
     v.normalize();
-    v.scale(150);
-    v.scale((1 / dist));
+    v.scale((((s * s) * s) / ((dist * dist) * dist)));
     return v;
+  }
+  
+  public float computeDistanceMin(final Point2f obj, final Rectangle2f objb, final Point2f me, final Rectangle2f meb) {
+    Point2f _upper = objb.getUpper();
+    float _x = _upper.getX();
+    Point2f _lower = objb.getLower();
+    float _x_1 = _lower.getX();
+    float _minus = (_x - _x_1);
+    float objr = (_minus / 2);
+    Point2f _upper_1 = meb.getUpper();
+    float _x_2 = _upper_1.getX();
+    Point2f _lower_1 = meb.getLower();
+    float _x_3 = _lower_1.getX();
+    float _minus_1 = (_x_2 - _x_3);
+    float mer = (_minus_1 / 2);
+    return (objr + mer);
   }
   
   /**
