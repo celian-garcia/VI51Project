@@ -22,8 +22,6 @@ import fr.utbm.info.vi51.marines.formation.FormationSlot
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
-import fr.utbm.info.vi51.framework.math.Vector2f
-import fr.utbm.info.vi51.framework.math.Point2f
 
 agent Follower extends AbstractAnimat {
 	
