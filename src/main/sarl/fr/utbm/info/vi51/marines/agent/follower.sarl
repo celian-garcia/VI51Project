@@ -42,10 +42,12 @@ agent Follower extends AbstractAnimat {
 	
 	on Initialize {
 		super._handle_Initialize_0(occurrence)
+		
 		var formation = occurrence.parameters.get(3) as Formation
 		var assignment = occurrence.parameters.get(4) as FormationAssignment
 		var index = assignment.allocate(false)
 		this.formationSlot = formation.getSlotAt(index)
+		
 		if (this.behaviorType == DynamicType::STEERING) {
 			this.seekBehaviour = new SteeringSeekBehaviour
 			var alignB = new SteeringAlignBehaviour(STOP_RADIUS, SLOW_RADIUS)

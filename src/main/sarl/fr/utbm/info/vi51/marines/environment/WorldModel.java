@@ -210,6 +210,14 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 				(float) Math.random() * MathUtil.TWO_PI);
 	}
 
+	
+	//TODO : when we create a body we say it the formation he belong
+	/** Create the body of a master.
+	 */
+	public void createMaster(){
+		createBody("LEADER-CHIEF");
+	}
+	
 	/** Create the body of a leader.
 	 */
 	public void createLeader() {

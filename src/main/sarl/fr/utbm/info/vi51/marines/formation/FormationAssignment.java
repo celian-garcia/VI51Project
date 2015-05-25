@@ -43,6 +43,7 @@ public class FormationAssignment {
 		if (isLeader) {
 			return 0;
 		}
+		
 		return this.nextFreeSlot++;
 	}
 

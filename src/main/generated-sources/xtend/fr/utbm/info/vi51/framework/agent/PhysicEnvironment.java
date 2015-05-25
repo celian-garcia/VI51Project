@@ -12,13 +12,11 @@ public interface PhysicEnvironment extends Capacity {
   /**
    * Default value for the parameter linearInfluence
    */
-  @Generated(" null")
   public final static Vector2f ___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCEKINEMATIC_0 = null;
   
   /**
    * Default value for the parameter angularInfluence
    */
-  @Generated(" 0f")
   public final static float ___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCEKINEMATIC_1 = 0f;
   
   /**
@@ -63,13 +61,11 @@ public interface PhysicEnvironment extends Capacity {
   /**
    * Default value for the parameter linearInfluence
    */
-  @Generated(" null")
   public final static Vector2f ___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCESTEERING_0 = null;
   
   /**
    * Default value for the parameter angularInfluence
    */
-  @Generated(" 0f")
   public final static float ___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCESTEERING_1 = 0f;
   
   /**

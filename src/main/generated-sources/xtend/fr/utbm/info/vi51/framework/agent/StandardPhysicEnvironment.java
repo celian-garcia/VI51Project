@@ -74,13 +74,11 @@ public class StandardPhysicEnvironment extends Skill implements PhysicEnvironmen
   /**
    * Default value for the parameter linearInfluence
    */
-  @Generated(" null")
   private final static Vector2f ___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCEKINEMATIC_0 = null;
   
   /**
    * Default value for the parameter angularInfluence
    */
-  @Generated(" 0f")
   private final static float ___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCEKINEMATIC_1 = 0f;
   
   @DefaultValueSource
@@ -103,13 +101,11 @@ public class StandardPhysicEnvironment extends Skill implements PhysicEnvironmen
   /**
    * Default value for the parameter linearInfluence
    */
-  @Generated(" null")
   private final static Vector2f ___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCESTEERING_0 = null;
   
   /**
    * Default value for the parameter angularInfluence
    */
-  @Generated(" 0f")
   private final static float ___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCESTEERING_1 = 0f;
   
   @DefaultValueSource

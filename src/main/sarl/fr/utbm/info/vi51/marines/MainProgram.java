@@ -29,6 +29,7 @@ import fr.utbm.info.vi51.framework.util.SpawnMapping;
 import fr.utbm.info.vi51.marines.agent.Follower;
 import fr.utbm.info.vi51.marines.agent.Leader;
 import fr.utbm.info.vi51.marines.agent.LeaderChief;
+import fr.utbm.info.vi51.marines.agent.SubLeader;
 import fr.utbm.info.vi51.marines.environment.WorldModel;
 import fr.utbm.info.vi51.marines.formation.BodyGuardFormation;
 import fr.utbm.info.vi51.marines.formation.Formation;
@@ -64,12 +65,17 @@ public class MainProgram {
 		Formation formation = new BodyGuardFormation(SLOT_COUNT);
 		
 		FormationAssignment chiefFormationAssignment = new FormationAssignment();
-		Formation chiefFormation = new VFormation(3);
+		Formation chiefFormation = new VFormation(10);
 		
 		WorldModel environment = new WorldModel(WORLD_SIZE_X, WORLD_SIZE_Y);
 		
+		environment.createMaster();
 		environment.createLeader();
-		environment.createFollower();
+		environment.createLeader();
+		environment.createLeader();
+		environment.createLeader();
+
+
 		environment.createFollower();
 		environment.createFollower();
 		environment.createFollower();
@@ -102,9 +108,10 @@ public class MainProgram {
 
 		@Override
 		public Class<? extends Agent> getAgentTypeForBody(AgentBody body) {
+
 			Object type = body.getType();
 			if ("LEADER".equals(type)) {
-				return Leader.class;
+				return SubLeader.class;
 			}
 			if ("FOLLOWER".equals(type)) {
 				return Follower.class;
