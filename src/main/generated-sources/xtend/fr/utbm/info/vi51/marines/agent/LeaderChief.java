@@ -11,10 +11,8 @@ import fr.utbm.info.vi51.framework.math.Point2f;
 import fr.utbm.info.vi51.framework.math.Rectangle2f;
 import fr.utbm.info.vi51.framework.math.Shape2f;
 import fr.utbm.info.vi51.framework.math.Vector2f;
-import fr.utbm.info.vi51.marines.behavior.AlignBehaviour;
 import fr.utbm.info.vi51.marines.behavior.SeekBehaviour;
 import fr.utbm.info.vi51.marines.behavior.WanderBehaviour;
-import fr.utbm.info.vi51.marines.behavior.kinematic.KinematicAlignBehaviour;
 import fr.utbm.info.vi51.marines.behavior.kinematic.KinematicSeekBehaviour;
 import fr.utbm.info.vi51.marines.behavior.kinematic.KinematicWanderBehaviour;
 import fr.utbm.info.vi51.marines.behavior.steering.SteeringAlignBehaviour;
@@ -22,8 +20,6 @@ import fr.utbm.info.vi51.marines.behavior.steering.SteeringFaceBehaviour;
 import fr.utbm.info.vi51.marines.behavior.steering.SteeringSeekBehaviour;
 import fr.utbm.info.vi51.marines.behavior.steering.SteeringWanderBehaviour;
 import fr.utbm.info.vi51.marines.formation.Formation;
-import fr.utbm.info.vi51.marines.formation.FormationAssignment;
-import fr.utbm.info.vi51.marines.formation.FormationSlot;
 import io.sarl.core.AgentSpawned;
 import io.sarl.core.DefaultContextInteractions;
 import io.sarl.core.Initialize;
@@ -42,11 +38,12 @@ import io.sarl.lang.core.SpaceID;
 import java.io.Serializable;
 import java.util.UUID;
 
+/**
+ * @author celian
+ */
 @SuppressWarnings("all")
-public class Leader extends AbstractAnimat {
+public class LeaderChief extends AbstractAnimat {
   protected SeekBehaviour seekBehaviour;
-  
-  protected AlignBehaviour alignBehaviour;
   
   protected WanderBehaviour wanderBehaviour;
   
@@ -62,27 +59,19 @@ public class Leader extends AbstractAnimat {
   
   protected final float WANDER_MAX_ROTATION = (MathUtil.PI / 4f);
   
-  protected Formation formation;
-  
-  protected FormationSlot chiefFormationSlot;
+  protected Formation chiefFormation;
   
   @Percept
   public void _handle_Initialize_0(final Initialize occurrence) {
     super._handle_Initialize_0(occurrence);
     Object _get = occurrence.parameters[3];
-    this.formation = ((Formation) _get);
-    Object _get_1 = occurrence.parameters[5];
-    Formation chiefFormation = ((Formation) _get_1);
-    Object _get_2 = occurrence.parameters[6];
-    FormationAssignment assignment = ((FormationAssignment) _get_2);
-    int index = assignment.allocate(false);
+    this.chiefFormation = ((Formation) _get);
     boolean _equals = Objects.equal(this.behaviorType, DynamicType.STEERING);
     if (_equals) {
       SteeringSeekBehaviour _steeringSeekBehaviour = new SteeringSeekBehaviour();
       this.seekBehaviour = _steeringSeekBehaviour;
       SteeringAlignBehaviour alignB = new SteeringAlignBehaviour(this.STOP_RADIUS, this.SLOW_RADIUS);
       SteeringFaceBehaviour faceB = new SteeringFaceBehaviour(this.STOP_DISTANCE, alignB);
-      this.alignBehaviour = alignB;
       SteeringWanderBehaviour _steeringWanderBehaviour = new SteeringWanderBehaviour(
         this.WANDER_CIRCLE_DISTANCE, 
         this.WANDER_CIRCLE_RADIUS, 
@@ -91,8 +80,6 @@ public class Leader extends AbstractAnimat {
     } else {
       KinematicSeekBehaviour _kinematicSeekBehaviour = new KinematicSeekBehaviour();
       this.seekBehaviour = _kinematicSeekBehaviour;
-      KinematicAlignBehaviour _kinematicAlignBehaviour = new KinematicAlignBehaviour(this.STOP_RADIUS);
-      this.alignBehaviour = _kinematicAlignBehaviour;
       KinematicWanderBehaviour _kinematicWanderBehaviour = new KinematicWanderBehaviour();
       this.wanderBehaviour = _kinematicWanderBehaviour;
     }
@@ -100,53 +87,88 @@ public class Leader extends AbstractAnimat {
     this.emit(_simulationAgentReady);
   }
   
+  @Generated
+  private boolean _guard_PerceptionEvent_1(final PerceptionEvent occurrence) {
+    boolean _isEmpty = occurrence.perceptions.isEmpty();
+    return _isEmpty;
+  }
+  
   @Percept
   public void _handle_PerceptionEvent_1(final PerceptionEvent occurrence) {
-    if ((this.chiefFormationSlot == null)) {
+    if (_guard_PerceptionEvent_1(occurrence)) {
       Point2f _position = occurrence.body.getPosition();
+      this.chiefFormation.setGlobalPosition(_position);
       Vector2f _direction = occurrence.body.getDirection();
+      this.chiefFormation.setGlobalOrientation(_direction);
+      Point2f _position_1 = occurrence.body.getPosition();
+      Vector2f _direction_1 = occurrence.body.getDirection();
       float _currentLinearSpeed = occurrence.body.getCurrentLinearSpeed();
       float _maxLinear = this.getMaxLinear(occurrence.body);
       float _currentAngularSpeed = occurrence.body.getCurrentAngularSpeed();
       float _maxAngular = this.getMaxAngular(occurrence.body);
-      BehaviourOutput _runWander = this.wanderBehaviour.runWander(_position, _direction, _currentLinearSpeed, _maxLinear, _currentAngularSpeed, _maxAngular);
+      BehaviourOutput _runWander = this.wanderBehaviour.runWander(_position_1, _direction_1, _currentLinearSpeed, _maxLinear, _currentAngularSpeed, _maxAngular);
       this.emitInfluence(_runWander);
-    } else {
-      Point2f position = this.chiefFormationSlot.getGlobalPosition();
-      Point2f _position_1 = occurrence.body.getPosition();
-      float _currentLinearSpeed_1 = occurrence.body.getCurrentLinearSpeed();
-      float _maxLinear_1 = this.getMaxLinear(occurrence.body);
-      BehaviourOutput bo1 = this.seekBehaviour.runSeek(_position_1, _currentLinearSpeed_1, _maxLinear_1, position);
-      Vector2f v = bo1.getLinear();
-      v.normalize();
-      for (final fr.utbm.info.vi51.framework.environment.Percept obj : occurrence.perceptions) {
-        Serializable _type = obj.getType();
-        boolean _equals = Objects.equal(_type, "ROCK");
-        if (_equals) {
-          Point2f _position_2 = obj.getPosition();
-          Shape2f<?> _shape = obj.getShape();
-          Rectangle2f _bounds = _shape.getBounds();
-          Point2f _position_3 = occurrence.body.getPosition();
-          Shape2f<?> _shape_1 = occurrence.body.getShape();
-          Rectangle2f _bounds_1 = _shape_1.getBounds();
-          float dmin = this.computeDistanceMin(_position_2, _bounds, _position_3, _bounds_1);
-          Point2f _position_4 = obj.getPosition();
-          Point2f _position_5 = occurrence.body.getPosition();
-          Vector2f rv = this.repulsiveVector(_position_4, _position_5, dmin);
-          v.add(rv);
+    }
+  }
+  
+  @Generated
+  private boolean _guard_PerceptionEvent_2(final PerceptionEvent occurrence) {
+    boolean _isEmpty = occurrence.perceptions.isEmpty();
+    boolean _not = (!_isEmpty);
+    return _not;
+  }
+  
+  @Percept
+  public void _handle_PerceptionEvent_2(final PerceptionEvent occurrence) {
+    if (_guard_PerceptionEvent_2(occurrence)) {
+      Point2f _position = occurrence.body.getPosition();
+      this.chiefFormation.setGlobalPosition(_position);
+      Vector2f _direction = occurrence.body.getDirection();
+      this.chiefFormation.setGlobalOrientation(_direction);
+      fr.utbm.info.vi51.framework.environment.Percept firstPercept = occurrence.perceptions.get(0);
+      Serializable _type = firstPercept.getType();
+      boolean _equals = Objects.equal(_type, "TARGET");
+      if (_equals) {
+        Point2f _position_1 = firstPercept.getPosition();
+        Point2f target = _position_1.clone();
+        Point2f _position_2 = occurrence.body.getPosition();
+        float _currentLinearSpeed = occurrence.body.getCurrentLinearSpeed();
+        float _maxLinear = this.getMaxLinear(occurrence.body);
+        BehaviourOutput bo1 = this.seekBehaviour.runSeek(_position_2, _currentLinearSpeed, _maxLinear, target);
+        Vector2f v = bo1.getLinear();
+        v.normalize();
+        for (final fr.utbm.info.vi51.framework.environment.Percept obj : occurrence.perceptions) {
+          Serializable _type_1 = obj.getType();
+          boolean _equals_1 = Objects.equal(_type_1, "ROCK");
+          if (_equals_1) {
+            Point2f _position_3 = obj.getPosition();
+            Shape2f<?> _shape = obj.getShape();
+            Rectangle2f _bounds = _shape.getBounds();
+            Point2f _position_4 = occurrence.body.getPosition();
+            Shape2f<?> _shape_1 = occurrence.body.getShape();
+            Rectangle2f _bounds_1 = _shape_1.getBounds();
+            float dmin = this.computeDistanceMin(_position_3, _bounds, _position_4, _bounds_1);
+            Point2f _position_5 = obj.getPosition();
+            Point2f _position_6 = occurrence.body.getPosition();
+            Vector2f rv = this.repulsiveVector(_position_5, _position_6, dmin);
+            v.add(rv);
+          }
         }
+        v.normalize();
+        float _maxLinear_1 = this.getMaxLinear(occurrence.body);
+        v.scale(_maxLinear_1);
+        bo1.setLinear(v);
+        this.emitInfluence(bo1);
+      } else {
+        Point2f _position_7 = occurrence.body.getPosition();
+        Vector2f _direction_1 = occurrence.body.getDirection();
+        float _currentLinearSpeed_1 = occurrence.body.getCurrentLinearSpeed();
+        float _maxLinear_2 = this.getMaxLinear(occurrence.body);
+        float _currentAngularSpeed = occurrence.body.getCurrentAngularSpeed();
+        float _maxAngular = this.getMaxAngular(occurrence.body);
+        BehaviourOutput _runWander = this.wanderBehaviour.runWander(_position_7, _direction_1, _currentLinearSpeed_1, _maxLinear_2, _currentAngularSpeed, _maxAngular);
+        this.emitInfluence(_runWander);
       }
-      v.normalize();
-      float _maxLinear_2 = this.getMaxLinear(occurrence.body);
-      v.scale(_maxLinear_2);
-      bo1.setLinear(v);
-      Vector2f orientation = this.chiefFormationSlot.getGlobalOrientation();
-      Vector2f _direction_1 = occurrence.body.getDirection();
-      float _currentAngularSpeed_1 = occurrence.body.getCurrentAngularSpeed();
-      float _maxAngular_1 = this.getMaxAngular(occurrence.body);
-      BehaviourOutput _runAlign = this.alignBehaviour.runAlign(_direction_1, _currentAngularSpeed_1, _maxAngular_1, orientation);
-      bo1.setAngular(_runAlign);
-      this.emitInfluence(bo1);
     }
   }
   
@@ -299,7 +321,7 @@ public class Leader extends AbstractAnimat {
    * @param parentID - identifier of the parent. It is the identifier of the parent agent and the enclosing contect, at the same time.
    */
   @Generated
-  public Leader(final UUID parentID) {
+  public LeaderChief(final UUID parentID) {
     super(parentID, null);
   }
   
@@ -309,7 +331,7 @@ public class Leader extends AbstractAnimat {
    * @param agentID - identifier of the agent. If <code>null</code> the agent identifier will be computed randomly.
    */
   @Generated
-  public Leader(final UUID parentID, final UUID agentID) {
+  public LeaderChief(final UUID parentID, final UUID agentID) {
     super(parentID, agentID);
   }
 }

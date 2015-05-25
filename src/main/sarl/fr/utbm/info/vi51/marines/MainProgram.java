@@ -28,10 +28,12 @@ import fr.utbm.info.vi51.framework.util.LocalizedString;
 import fr.utbm.info.vi51.framework.util.SpawnMapping;
 import fr.utbm.info.vi51.marines.agent.Follower;
 import fr.utbm.info.vi51.marines.agent.Leader;
+import fr.utbm.info.vi51.marines.agent.LeaderChief;
 import fr.utbm.info.vi51.marines.environment.WorldModel;
 import fr.utbm.info.vi51.marines.formation.BodyGuardFormation;
 import fr.utbm.info.vi51.marines.formation.Formation;
 import fr.utbm.info.vi51.marines.formation.FormationAssignment;
+import fr.utbm.info.vi51.marines.formation.VFormation;
 import fr.utbm.info.vi51.marines.gui.GUI;
 
 /**
@@ -61,6 +63,9 @@ public class MainProgram {
 		FormationAssignment formationAssignment = new FormationAssignment();
 		Formation formation = new BodyGuardFormation(SLOT_COUNT);
 		
+		FormationAssignment chiefFormationAssignment = new FormationAssignment();
+		Formation chiefFormation = new VFormation(3);
+		
 		WorldModel environment = new WorldModel(WORLD_SIZE_X, WORLD_SIZE_Y);
 		
 		environment.createLeader();
@@ -88,7 +93,9 @@ public class MainProgram {
 				type,
 				gui,
 				formation,
-				formationAssignment);
+				formationAssignment,
+				chiefFormation,
+				chiefFormationAssignment);
 	}
 	
 	private static class ApplicationMapping extends SpawnMapping {
@@ -101,6 +108,9 @@ public class MainProgram {
 			}
 			if ("FOLLOWER".equals(type)) {
 				return Follower.class;
+			}
+			if ("LEADER-CHIEF".equals(type)) {
+				return LeaderChief.class;
 			}
 			throw new IllegalArgumentException();
 		}

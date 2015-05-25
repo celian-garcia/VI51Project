@@ -1,0 +1,133 @@
+/**
+ * 
+ */
+package fr.utbm.info.vi51.marines.^agent
+
+import fr.utbm.info.vi51.framework.^agent.AbstractAnimat
+import fr.utbm.info.vi51.framework.^agent.PhysicEnvironment
+import fr.utbm.info.vi51.framework.environment.DynamicType
+import fr.utbm.info.vi51.framework.environment.PerceptionEvent
+import fr.utbm.info.vi51.framework.environment.SimulationAgentReady
+import fr.utbm.info.vi51.framework.math.MathUtil
+import fr.utbm.info.vi51.marines.^behavior.SeekBehaviour
+import fr.utbm.info.vi51.marines.^behavior.WanderBehaviour
+import fr.utbm.info.vi51.marines.^behavior.kinematic.KinematicSeekBehaviour
+import fr.utbm.info.vi51.marines.^behavior.kinematic.KinematicWanderBehaviour
+import fr.utbm.info.vi51.marines.^behavior.steering.SteeringAlignBehaviour
+import fr.utbm.info.vi51.marines.^behavior.steering.SteeringFaceBehaviour
+import fr.utbm.info.vi51.marines.^behavior.steering.SteeringSeekBehaviour
+import fr.utbm.info.vi51.marines.^behavior.steering.SteeringWanderBehaviour
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import fr.utbm.info.vi51.marines.formation.Formation
+
+/**
+ * @author celian
+ *
+ */
+
+agent LeaderChief extends AbstractAnimat {
+	
+	uses PhysicEnvironment, Lifecycle, DefaultContextInteractions
+	
+	var seekBehaviour : SeekBehaviour
+	var wanderBehaviour : WanderBehaviour
+	
+	val STOP_DISTANCE = 3f
+	val STOP_RADIUS = MathUtil.PI/10f
+	val SLOW_RADIUS = MathUtil.PI/4f
+	val WANDER_CIRCLE_DISTANCE = 20f
+	val WANDER_CIRCLE_RADIUS = 10f
+	val WANDER_MAX_ROTATION = MathUtil.PI/4f
+	
+	var chiefFormation : Formation
+	
+	on Initialize {
+		super._handle_Initialize_0(occurrence)
+		this.chiefFormation = occurrence.parameters.get(3) as Formation
+		if (this.behaviorType == DynamicType::STEERING) {
+			this.seekBehaviour = new SteeringSeekBehaviour
+
+			var alignB = new SteeringAlignBehaviour(STOP_RADIUS, SLOW_RADIUS)
+			var faceB = new SteeringFaceBehaviour(STOP_DISTANCE, alignB)
+			this.wanderBehaviour = new SteeringWanderBehaviour(
+					WANDER_CIRCLE_DISTANCE, 
+					WANDER_CIRCLE_RADIUS, 
+					WANDER_MAX_ROTATION,
+					faceB)
+		}
+		else {
+			this.seekBehaviour =  new KinematicSeekBehaviour
+			this.wanderBehaviour = new KinematicWanderBehaviour
+		} 
+		emit(new SimulationAgentReady)
+	}
+	
+	on PerceptionEvent [ occurrence.perceptions.empty ] {
+			this.chiefFormation.globalPosition = occurrence.body.position
+			this.chiefFormation.globalOrientation = occurrence.body.direction
+			
+			this.wanderBehaviour.runWander(
+				occurrence.body.position,
+				occurrence.body.direction,
+				occurrence.body.currentLinearSpeed,
+				occurrence.body.maxLinear,
+				occurrence.body.currentAngularSpeed,
+				occurrence.body.maxAngular
+			).emitInfluence
+	}
+	
+	on PerceptionEvent [ !occurrence.perceptions.empty ] {
+		this.chiefFormation.globalPosition = occurrence.body.position
+		this.chiefFormation.globalOrientation = occurrence.body.direction
+		
+		var firstPercept = occurrence.perceptions.get(0)
+
+		if (firstPercept.type == "TARGET") {
+			var target = firstPercept.position.clone
+
+			// run the seek behaviour
+			var bo1 = this.seekBehaviour.runSeek(
+				occurrence.body.position,
+				occurrence.body.currentLinearSpeed,
+				occurrence.body.maxLinear,
+				target
+			)
+			
+			var v = bo1.linear
+			v.normalize
+
+			for (obj:occurrence.perceptions) {
+				if (obj.type == "ROCK") {
+
+					var dmin = computeDistanceMin(
+						obj.position, obj.shape.bounds,
+						occurrence.body.position,
+						occurrence.body.shape.bounds
+					)
+
+					var rv = obj.position.repulsiveVector(occurrence.body.position, dmin)
+					v.add(rv)
+				}
+			}
+
+			v.normalize
+			v.scale(occurrence.body.maxLinear)
+			bo1.linear = v
+			bo1.emitInfluence
+		}
+		else {
+			// run the wander behaviour
+			this.wanderBehaviour.runWander(
+				occurrence.body.position,
+				occurrence.body.direction,
+				occurrence.body.currentLinearSpeed,
+				occurrence.body.maxLinear,
+				occurrence.body.currentAngularSpeed,
+				occurrence.body.maxAngular
+			).emitInfluence
+		}
+	}
+
+}
