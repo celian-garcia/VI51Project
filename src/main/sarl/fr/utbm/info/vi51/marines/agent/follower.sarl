@@ -43,10 +43,25 @@ agent Follower extends AbstractAnimat {
 	on Initialize {
 		super._handle_Initialize_0(occurrence)
 		
-		var formation = occurrence.parameters.get(3) as Formation
-		var assignment = occurrence.parameters.get(4) as FormationAssignment
-		var index = assignment.allocate(false)
-		this.formationSlot = formation.getSlotAt(index)
+		var index = -1;
+		var params_length = occurrence.parameters.length();
+		var formation_length = (params_length - 3) / 2;
+		var i = 4;
+		var formation = null as Formation;
+		
+		// search for a formation o integrate 
+		while(index == -1 && i + formation_length < occurrence.parameters.length) {
+			formation = occurrence.parameters.get(i) as Formation
+			var assignment = occurrence.parameters.get(i + formation_length) as FormationAssignment
+			index = assignment.allocate(false)
+			
+			i++;
+		}
+		
+		if(index != -1) {
+			this.formationSlot = formation.getSlotAt(index)
+		}
+		
 		
 		if (this.behaviorType == DynamicType::STEERING) {
 			this.seekBehaviour = new SteeringSeekBehaviour

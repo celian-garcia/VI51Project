@@ -24,15 +24,21 @@ agent SubLeader extends Leader {
 	var chiefFormationSlot : FormationSlot
 	
 	on Initialize {
-		super._handle_Initialize_0(occurrence)
-		
-		var chiefFormation = occurrence.parameters.get(5) as Formation
-		var assignment = occurrence.parameters.get(6) as FormationAssignment
+		var params_length = occurrence.parameters.length()
+		var formation_length = (params_length - 3) / 2
+		var i = 3
+		var chiefFormation = occurrence.parameters.get(i) as Formation
+		var assignment = occurrence.parameters.get(i + formation_length) as FormationAssignment
 		var index = assignment.allocate(false)
 		this.chiefFormationSlot = chiefFormation.getSlotAt(index)
+		this.fIndex = index;
+		
+		super._handle_Initialize_0(occurrence)
 	}
 
 	on PerceptionEvent {
+		super._handle_PerceptionEvent_1(occurrence)
+		
 		if (this.chiefFormationSlot === null) {
 			this.wanderBehaviour.runWander(
 				occurrence.body.position,

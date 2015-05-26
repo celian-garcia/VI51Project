@@ -22,8 +22,12 @@ agent LeaderChief extends Leader {
 	var chiefFormation : Formation
 	
 	on Initialize {
+		
+		// The parameter of index 3 is the master formation
+		this.chiefFormation = occurrence.parameters.get(3) as Formation
+		
+		this.fIndex = 0;
 		super._handle_Initialize_0(occurrence)
-		this.chiefFormation = occurrence.parameters.get(5) as Formation
 	}
 
 	

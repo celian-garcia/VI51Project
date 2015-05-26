@@ -24,9 +24,10 @@ public class LeaderChief extends Leader {
   
   @Percept
   public void _handle_Initialize_0(final Initialize occurrence) {
-    super._handle_Initialize_0(occurrence);
-    Object _get = occurrence.parameters[5];
+    Object _get = occurrence.parameters[3];
     this.chiefFormation = ((Formation) _get);
+    this.fIndex = 0;
+    super._handle_Initialize_0(occurrence);
   }
   
   @Generated

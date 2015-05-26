@@ -27,11 +27,13 @@ package fr.utbm.info.vi51.marines.formation;
 public class FormationAssignment {
 
 	private int nextFreeSlot = 1;
+	private int mCount;
+	private boolean haveLeader = false;
 
 	/**
 	 */
-	public FormationAssignment() {
-		//
+	public FormationAssignment(int count) {
+		mCount = count;
 	}
 	
 	/** Allocate the next free slot.
@@ -41,10 +43,19 @@ public class FormationAssignment {
 	 */
 	public synchronized int allocate(boolean isLeader) {
 		if (isLeader) {
+			haveLeader = true;
 			return 0;
 		}
 		
-		return this.nextFreeSlot++;
+		if (nextFreeSlot < mCount) {
+			return this.nextFreeSlot++;
+		}
+		
+		return -1;
+	}
+	
+	public synchronized boolean haveLeader(){
+		return haveLeader;
 	}
 
 }

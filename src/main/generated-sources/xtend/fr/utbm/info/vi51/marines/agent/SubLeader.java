@@ -26,18 +26,23 @@ public class SubLeader extends Leader {
   
   @Percept
   public void _handle_Initialize_0(final Initialize occurrence) {
-    super._handle_Initialize_0(occurrence);
-    Object _get = occurrence.parameters[5];
+    int params_length = occurrence.parameters.length;
+    int formation_length = ((params_length - 3) / 2);
+    int i = 3;
+    Object _get = occurrence.parameters[i];
     Formation chiefFormation = ((Formation) _get);
-    Object _get_1 = occurrence.parameters[6];
+    Object _get_1 = occurrence.parameters[(i + formation_length)];
     FormationAssignment assignment = ((FormationAssignment) _get_1);
     int index = assignment.allocate(false);
     FormationSlot _slotAt = chiefFormation.getSlotAt(index);
     this.chiefFormationSlot = _slotAt;
+    this.fIndex = index;
+    super._handle_Initialize_0(occurrence);
   }
   
   @Percept
   public void _handle_PerceptionEvent_1(final PerceptionEvent occurrence) {
+    super._handle_PerceptionEvent_1(occurrence);
     if ((this.chiefFormationSlot == null)) {
       Point2f _position = occurrence.body.getPosition();
       Vector2f _direction = occurrence.body.getDirection();
