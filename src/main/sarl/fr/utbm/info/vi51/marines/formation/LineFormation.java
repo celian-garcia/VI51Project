@@ -24,7 +24,7 @@ public static final float INTER_SLOT_SPACE = 200f;
 	 */
 	@Override
 	public String toString() {
-		return LocalizedString.getString(VFormation.class, "NAME", getSlots().size()); //$NON-NLS-1$
+		return LocalizedString.getString(LineFormation.class, "NAME", getSlots().size()); //$NON-NLS-1$
 	}
 
 	/**
