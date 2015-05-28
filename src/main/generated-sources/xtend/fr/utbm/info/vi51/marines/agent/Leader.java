@@ -63,7 +63,7 @@ public class Leader extends AbstractAnimat {
   @Percept
   public void _handle_Initialize_0(final Initialize occurrence) {
     super._handle_Initialize_0(occurrence);
-    Object _get = occurrence.parameters[(3 + this.fIndex)];
+    Object _get = occurrence.parameters[((3 + this.fIndex) + 1)];
     this.formation = ((Formation) _get);
     boolean _equals = Objects.equal(this.behaviorType, DynamicType.STEERING);
     if (_equals) {

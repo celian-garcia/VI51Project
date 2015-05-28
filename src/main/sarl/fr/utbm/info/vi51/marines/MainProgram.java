@@ -34,6 +34,8 @@ import fr.utbm.info.vi51.marines.environment.WorldModel;
 import fr.utbm.info.vi51.marines.formation.BodyGuardFormation;
 import fr.utbm.info.vi51.marines.formation.Formation;
 import fr.utbm.info.vi51.marines.formation.FormationAssignment;
+import fr.utbm.info.vi51.marines.formation.LineFormation;
+import fr.utbm.info.vi51.marines.formation.RectangleFormation;
 import fr.utbm.info.vi51.marines.formation.VFormation;
 import fr.utbm.info.vi51.marines.gui.GUI;
 
@@ -65,7 +67,8 @@ public class MainProgram {
 		// First formation is the master formation 
 		// Others formation are the leader formations
 		Formation[] formations = new Formation[]{
-				new VFormation(5),
+				new LineFormation(5),
+				new BodyGuardFormation (SLOT_COUNT),
 				new BodyGuardFormation (SLOT_COUNT),
 				new BodyGuardFormation (SLOT_COUNT),
 				new BodyGuardFormation (SLOT_COUNT),
@@ -73,6 +76,7 @@ public class MainProgram {
 		};
 		FormationAssignment[] formationAssignments = new FormationAssignment[]{
 				new FormationAssignment(5),
+				new FormationAssignment(SLOT_COUNT),
 				new FormationAssignment(SLOT_COUNT),
 				new FormationAssignment(SLOT_COUNT),
 				new FormationAssignment(SLOT_COUNT),

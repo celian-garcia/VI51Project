@@ -42,7 +42,7 @@ agent Leader extends AbstractAnimat {
 	on Initialize {
 		super._handle_Initialize_0(occurrence)
 		
-		this.formation = occurrence.parameters.get(3 + fIndex) as Formation
+		this.formation = occurrence.parameters.get(3 + fIndex + 1) as Formation
 		
 		if (this.behaviorType == DynamicType::STEERING) {
 			this.seekBehaviour = new SteeringSeekBehaviour
