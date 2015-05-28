@@ -28,10 +28,15 @@ import fr.utbm.info.vi51.framework.util.LocalizedString;
 import fr.utbm.info.vi51.framework.util.SpawnMapping;
 import fr.utbm.info.vi51.marines.agent.Follower;
 import fr.utbm.info.vi51.marines.agent.Leader;
+import fr.utbm.info.vi51.marines.agent.LeaderChief;
+import fr.utbm.info.vi51.marines.agent.SubLeader;
 import fr.utbm.info.vi51.marines.environment.WorldModel;
 import fr.utbm.info.vi51.marines.formation.BodyGuardFormation;
 import fr.utbm.info.vi51.marines.formation.Formation;
 import fr.utbm.info.vi51.marines.formation.FormationAssignment;
+import fr.utbm.info.vi51.marines.formation.LineFormation;
+import fr.utbm.info.vi51.marines.formation.RectangleFormation;
+import fr.utbm.info.vi51.marines.formation.VFormation;
 import fr.utbm.info.vi51.marines.gui.GUI;
 
 /**
@@ -58,12 +63,43 @@ public class MainProgram {
 			System.exit(0);
 		}
 		
-		FormationAssignment formationAssignment = new FormationAssignment();
-		Formation formation = new BodyGuardFormation(SLOT_COUNT);
+		// Initialize formations and assignments
+		// First formation is the master formation 
+		// Others formation are the leader formations
+		Formation[] formations = new Formation[]{
+				new LineFormation(5),
+				new BodyGuardFormation (SLOT_COUNT),
+				new BodyGuardFormation (SLOT_COUNT),
+				new BodyGuardFormation (SLOT_COUNT),
+				new BodyGuardFormation (SLOT_COUNT),
+				new BodyGuardFormation (SLOT_COUNT)
+		};
+		FormationAssignment[] formationAssignments = new FormationAssignment[]{
+				new FormationAssignment(5),
+				new FormationAssignment(SLOT_COUNT),
+				new FormationAssignment(SLOT_COUNT),
+				new FormationAssignment(SLOT_COUNT),
+				new FormationAssignment(SLOT_COUNT),
+				new FormationAssignment(SLOT_COUNT)
+		};
+		
 		
 		WorldModel environment = new WorldModel(WORLD_SIZE_X, WORLD_SIZE_Y);
 		
+		environment.createMaster();
 		environment.createLeader();
+		environment.createLeader();
+		environment.createLeader();
+		environment.createLeader();
+
+		environment.createFollower();
+		environment.createFollower();
+		environment.createFollower();
+		environment.createFollower();
+		environment.createFollower();
+		environment.createFollower();
+		environment.createFollower();
+		environment.createFollower();
 		environment.createFollower();
 		environment.createFollower();
 		environment.createFollower();
@@ -80,27 +116,46 @@ public class MainProgram {
 		environment.createRock(500f, 400f);
 		environment.createRock(600f, 300f);
 		
-		FrameworkGUI gui = new GUI(WORLD_SIZE_X, WORLD_SIZE_Y, environment.getTimeManager(), formation);
+		FrameworkGUI gui = new GUI(WORLD_SIZE_X, WORLD_SIZE_Y, environment.getTimeManager(), formations);
 
+		
+		// Initialize parameters
+		Object [] params = new Object[formations.length + formationAssignments.length];
+		int i = 0;
+		for (Formation f:formations) {
+			params[i++] = f;
+		}
+		for (FormationAssignment fa : formationAssignments) {
+			params[i++] = fa;
+		}
+		
+		for (Object o :params) {
+			System.out.println(o);
+		}
+		
+		
 		FrameworkLauncher.launchSimulation(
 				environment,
 				new ApplicationMapping(),
 				type,
 				gui,
-				formation,
-				formationAssignment);
+				params);
 	}
 	
 	private static class ApplicationMapping extends SpawnMapping {
 
 		@Override
 		public Class<? extends Agent> getAgentTypeForBody(AgentBody body) {
+
 			Object type = body.getType();
 			if ("LEADER".equals(type)) {
-				return Leader.class;
+				return SubLeader.class;
 			}
 			if ("FOLLOWER".equals(type)) {
 				return Follower.class;
+			}
+			if ("LEADER-CHIEF".equals(type)) {
+				return LeaderChief.class;
 			}
 			throw new IllegalArgumentException();
 		}

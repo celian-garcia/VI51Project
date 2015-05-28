@@ -70,7 +70,16 @@ public abstract class Formation {
 	 * @return the slot at the given index.
 	 */
 	public FormationSlot getSlotAt(int index) {
-		return this.spots.get(index);
+		try {
+			return this.spots.get(index);
+		}
+		catch (IndexOutOfBoundsException e){
+			return null;
+		}
+	}
+	
+	public FormationSlot getLeaderSlot() {
+		return this.leaderSpot;
 	}
 
 	/** Force this formation body to contains the given number of slots.

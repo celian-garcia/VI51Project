@@ -1,0 +1,91 @@
+/**
+ * 
+ */
+package fr.utbm.info.vi51.marines.^agent
+
+import fr.utbm.info.vi51.framework.^agent.PhysicEnvironment
+import fr.utbm.info.vi51.framework.environment.PerceptionEvent
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import fr.utbm.info.vi51.marines.formation.Formation
+import fr.utbm.info.vi51.marines.formation.FormationSlot
+import fr.utbm.info.vi51.marines.formation.FormationAssignment
+
+/**
+ * @author celian
+ *
+ */
+
+agent SubLeader extends Leader {
+	
+	uses PhysicEnvironment, Lifecycle, DefaultContextInteractions
+	
+	var chiefFormationSlot : FormationSlot
+	
+	on Initialize {
+		var params_length = occurrence.parameters.length()
+		var formation_length = (params_length - 3) / 2
+		var i = 3
+		var chiefFormation = occurrence.parameters.get(i) as Formation
+		var assignment = occurrence.parameters.get(i + formation_length) as FormationAssignment
+		var index = assignment.allocate(false)
+		this.chiefFormationSlot = chiefFormation.getSlotAt(index)
+		this.fIndex = index;
+		
+		super._handle_Initialize_0(occurrence)
+	}
+
+	on PerceptionEvent {
+		super._handle_PerceptionEvent_1(occurrence)
+		
+		if (this.chiefFormationSlot === null) {
+			this.wanderBehaviour.runWander(
+				occurrence.body.position,
+				occurrence.body.direction,
+				occurrence.body.currentLinearSpeed,
+				occurrence.body.maxLinear,
+				occurrence.body.currentAngularSpeed,
+				occurrence.body.maxAngular
+			).emitInfluence			
+		} else {
+			var position = this.chiefFormationSlot.globalPosition
+			var bo1 = this.seekBehaviour.runSeek(
+				occurrence.body.position,
+				occurrence.body.currentLinearSpeed,
+				occurrence.body.maxLinear,
+				position)
+			
+			var v = bo1.linear 
+			v.normalize
+			
+			for (obj:occurrence.perceptions) {
+				if (obj.type == "ROCK") {
+
+					var dmin = computeDistanceMin(
+						obj.position, obj.shape.bounds,
+						occurrence.body.position,
+						occurrence.body.shape.bounds
+					)
+
+					var rv = obj.position.repulsiveVector(occurrence.body.position, dmin)
+					v.add(rv)
+				}
+			}
+			
+			v.normalize
+			v.scale(occurrence.body.maxLinear)
+			bo1.linear = v
+			
+			var orientation = this.chiefFormationSlot.globalOrientation
+			bo1.angular = this.alignBehaviour.runAlign(
+				occurrence.body.direction,
+				occurrence.body.currentAngularSpeed,
+				occurrence.body.maxAngular,
+				orientation)
+				
+			bo1.emitInfluence
+		}
+	}
+		
+}

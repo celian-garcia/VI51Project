@@ -75,16 +75,16 @@ public class StandardPhysicEnvironment extends Skill implements PhysicEnvironmen
    * Default value for the parameter linearInfluence
    */
   @Generated(" null")
-  private final static Vector2f ___FORMAL_PARAMETER_DEFAULT_VALUE_3_0 = null;
+  private final static Vector2f ___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCEKINEMATIC_0 = null;
   
   /**
    * Default value for the parameter angularInfluence
    */
   @Generated(" 0f")
-  private final static float ___FORMAL_PARAMETER_DEFAULT_VALUE_3_1 = 0f;
+  private final static float ___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCEKINEMATIC_1 = 0f;
   
   @DefaultValueSource
-  public void influenceKinematic(@DefaultValue("3_0") final Vector2f linearInfluence, @DefaultValue("3_1") final float angularInfluence) {
+  public void influenceKinematic(@DefaultValue("fr.utbm.info.vi51.framework.agent.StandardPhysicEnvironment#INFLUENCEKINEMATIC_0") final Vector2f linearInfluence, @DefaultValue("fr.utbm.info.vi51.framework.agent.StandardPhysicEnvironment#INFLUENCEKINEMATIC_1") final float angularInfluence) {
     MotionInfluence mi = null;
     boolean _tripleEquals = linearInfluence.operator_tripleEquals(null);
     if (_tripleEquals) {
@@ -100,38 +100,20 @@ public class StandardPhysicEnvironment extends Skill implements PhysicEnvironmen
     this.physicSpace.emit(event, _addressUUIDScope);
   }
   
-  @DefaultValueUse("fr.utbm.info.vi51.framework.math.Vector2f,float")
-  @Generated
-  public final void influenceKinematic() {
-    influenceKinematic(___FORMAL_PARAMETER_DEFAULT_VALUE_3_0, ___FORMAL_PARAMETER_DEFAULT_VALUE_3_1);
-  }
-  
-  @DefaultValueUse("fr.utbm.info.vi51.framework.math.Vector2f,float")
-  @Generated
-  public final void influenceKinematic(final float angularInfluence) {
-    influenceKinematic(___FORMAL_PARAMETER_DEFAULT_VALUE_3_0, angularInfluence);
-  }
-  
-  @DefaultValueUse("fr.utbm.info.vi51.framework.math.Vector2f,float")
-  @Generated
-  public final void influenceKinematic(final Vector2f linearInfluence) {
-    influenceKinematic(linearInfluence, ___FORMAL_PARAMETER_DEFAULT_VALUE_3_1);
-  }
-  
   /**
    * Default value for the parameter linearInfluence
    */
   @Generated(" null")
-  private final static Vector2f ___FORMAL_PARAMETER_DEFAULT_VALUE_4_0 = null;
+  private final static Vector2f ___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCESTEERING_0 = null;
   
   /**
    * Default value for the parameter angularInfluence
    */
   @Generated(" 0f")
-  private final static float ___FORMAL_PARAMETER_DEFAULT_VALUE_4_1 = 0f;
+  private final static float ___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCESTEERING_1 = 0f;
   
   @DefaultValueSource
-  public void influenceSteering(@DefaultValue("4_0") final Vector2f linearInfluence, @DefaultValue("4_1") final float angularInfluence) {
+  public void influenceSteering(@DefaultValue("fr.utbm.info.vi51.framework.agent.StandardPhysicEnvironment#INFLUENCESTEERING_0") final Vector2f linearInfluence, @DefaultValue("fr.utbm.info.vi51.framework.agent.StandardPhysicEnvironment#INFLUENCESTEERING_1") final float angularInfluence) {
     MotionInfluence mi = null;
     boolean _tripleEquals = linearInfluence.operator_tripleEquals(null);
     if (_tripleEquals) {
@@ -145,24 +127,6 @@ public class StandardPhysicEnvironment extends Skill implements PhysicEnvironmen
     event.setSource(this.myAdr);
     AddressUUIDScope _addressUUIDScope = new AddressUUIDScope(this.environmentID);
     this.physicSpace.emit(event, _addressUUIDScope);
-  }
-  
-  @DefaultValueUse("fr.utbm.info.vi51.framework.math.Vector2f,float")
-  @Generated
-  public final void influenceSteering() {
-    influenceSteering(___FORMAL_PARAMETER_DEFAULT_VALUE_4_0, ___FORMAL_PARAMETER_DEFAULT_VALUE_4_1);
-  }
-  
-  @DefaultValueUse("fr.utbm.info.vi51.framework.math.Vector2f,float")
-  @Generated
-  public final void influenceSteering(final float angularInfluence) {
-    influenceSteering(___FORMAL_PARAMETER_DEFAULT_VALUE_4_0, angularInfluence);
-  }
-  
-  @DefaultValueUse("fr.utbm.info.vi51.framework.math.Vector2f,float")
-  @Generated
-  public final void influenceSteering(final Vector2f linearInfluence) {
-    influenceSteering(linearInfluence, ___FORMAL_PARAMETER_DEFAULT_VALUE_4_1);
   }
   
   /**
@@ -351,5 +315,41 @@ public class StandardPhysicEnvironment extends Skill implements PhysicEnvironmen
   @ImportedCapacityFeature(Behaviors.class)
   protected void wake(final Event evt) {
     getSkill(io.sarl.core.Behaviors.class).wake(evt);
+  }
+  
+  @DefaultValueUse("fr.utbm.info.vi51.framework.math.Vector2f,float")
+  @Generated
+  public final void influenceKinematic() {
+    influenceKinematic(___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCEKINEMATIC_0, ___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCEKINEMATIC_1);
+  }
+  
+  @DefaultValueUse("fr.utbm.info.vi51.framework.math.Vector2f,float")
+  @Generated
+  public final void influenceKinematic(final float angularInfluence) {
+    influenceKinematic(___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCEKINEMATIC_0, angularInfluence);
+  }
+  
+  @DefaultValueUse("fr.utbm.info.vi51.framework.math.Vector2f,float")
+  @Generated
+  public final void influenceKinematic(final Vector2f linearInfluence) {
+    influenceKinematic(linearInfluence, ___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCEKINEMATIC_1);
+  }
+  
+  @DefaultValueUse("fr.utbm.info.vi51.framework.math.Vector2f,float")
+  @Generated
+  public final void influenceSteering() {
+    influenceSteering(___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCESTEERING_0, ___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCESTEERING_1);
+  }
+  
+  @DefaultValueUse("fr.utbm.info.vi51.framework.math.Vector2f,float")
+  @Generated
+  public final void influenceSteering(final float angularInfluence) {
+    influenceSteering(___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCESTEERING_0, angularInfluence);
+  }
+  
+  @DefaultValueUse("fr.utbm.info.vi51.framework.math.Vector2f,float")
+  @Generated
+  public final void influenceSteering(final Vector2f linearInfluence) {
+    influenceSteering(linearInfluence, ___FORMAL_PARAMETER_DEFAULT_VALUE_INFLUENCESTEERING_1);
   }
 }
