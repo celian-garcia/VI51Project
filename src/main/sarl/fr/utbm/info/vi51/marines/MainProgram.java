@@ -38,7 +38,10 @@ import fr.utbm.info.vi51.marines.formation.Formation;
 import fr.utbm.info.vi51.marines.formation.FormationAssignment;
 import fr.utbm.info.vi51.marines.formation.LineFormation;
 import fr.utbm.info.vi51.marines.formation.RectangleFormation;
+<<<<<<< HEAD
 import fr.utbm.info.vi51.marines.formation.SurroundFormation;
+=======
+>>>>>>> origin/master
 import fr.utbm.info.vi51.marines.formation.VFormation;
 import fr.utbm.info.vi51.marines.gui.GUI;
 
@@ -69,6 +72,7 @@ public class MainProgram {
 		// Initialize formations and assignments
 		// First formation is the master formation 
 		// Others formation are the leader formations
+<<<<<<< HEAD
 
 		Formation[] formations = new Formation[]{
 				new LineFormation(5),
@@ -77,6 +81,15 @@ public class MainProgram {
 				new VFormation (SLOT_COUNT),
 				new SurroundFormation (SLOT_COUNT),
 				new SurroundFormation (SLOT_COUNT)
+=======
+		Formation[] formations = new Formation[]{
+				new LineFormation(5),
+				new BodyGuardFormation (SLOT_COUNT),
+				new BodyGuardFormation (SLOT_COUNT),
+				new BodyGuardFormation (SLOT_COUNT),
+				new BodyGuardFormation (SLOT_COUNT),
+				new BodyGuardFormation (SLOT_COUNT)
+>>>>>>> origin/master
 		};
 		FormationAssignment[] formationAssignments = new FormationAssignment[]{
 				new FormationAssignment(5),
@@ -92,9 +105,15 @@ public class MainProgram {
 		
 		environment.createMaster();
 		environment.createLeader();
+<<<<<<< HEAD
 		environment.createLeader();
 		environment.createLeader();
 		environment.createLeader();
+=======
+		environment.createLeader();
+		environment.createLeader();
+		environment.createLeader();
+>>>>>>> origin/master
 
 		environment.createFollower();
 		environment.createFollower();
