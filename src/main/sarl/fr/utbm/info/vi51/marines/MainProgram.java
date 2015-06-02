@@ -129,10 +129,6 @@ public class MainProgram {
 			params[i++] = fa;
 		}
 		
-		for (Object o :params) {
-			System.out.println(o);
-		}
-		
 		
 		FrameworkLauncher.launchSimulation(
 				environment,

@@ -90,6 +90,7 @@ public abstract class AbstractFrameworkGUI extends JFrame implements FrameworkGU
 	private WorldModelStateProvider environment = null;
 
 	private final JLabel messageBox;
+	private final JLabel formationMessageBox;
 	private final JSlider speedSlider;
 
 	private static int time2slider(float delay) {
@@ -144,9 +145,11 @@ public abstract class AbstractFrameworkGUI extends JFrame implements FrameworkGU
 		});
 
 		this.messageBox = new JLabel();
+		this.formationMessageBox = new JLabel();
 
 		content.add(BorderLayout.SOUTH, createBottomPanel(this.speedSlider, closeBt, this.messageBox));
-
+		content.add(BorderLayout.EAST, createRightPanel(this.formationMessageBox));
+		
 		this.world.setPreferredSize(new Dimension((int)worldWidth, (int)worldHeight));
 
 		addWindowListener(new WindowAdapter() {
@@ -228,6 +231,18 @@ public abstract class AbstractFrameworkGUI extends JFrame implements FrameworkGU
 		bottomPanel.add(closeButton);
 		bottomPanel.add(messageBox);
 		return bottomPanel;
+	}
+	
+	/** Create the right panel.
+	 * 
+	 * @param messageBox the box for messages.
+	 * @return the right panel.
+	 */
+	protected JComponent createRightPanel(JComponent messageBox) {
+		JPanel rightPanel = new JPanel();
+		rightPanel.setLayout(new GridLayout(1, 3));
+		rightPanel.add(messageBox);
+		return rightPanel;
 	}
 
 	/**

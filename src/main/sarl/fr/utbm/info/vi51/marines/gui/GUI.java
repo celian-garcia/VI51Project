@@ -35,11 +35,14 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 
 import fr.utbm.info.vi51.framework.gui.AbstractFrameworkGUI;
@@ -56,7 +59,7 @@ import fr.utbm.info.vi51.marines.formation.FormationSlot;
  * @author St&eacute;phane GALLAND &lt;stephane.galland@utbm.fr&gt;
  * @version $Name$ $Revision$ $Date$
  */
-public class GUI extends AbstractFrameworkGUI {
+public class GUI extends AbstractFrameworkGUI implements ActionListener{
 
 	private static final long serialVersionUID = 7958401897774129069L;
 
@@ -154,6 +157,36 @@ public class GUI extends AbstractFrameworkGUI {
 		bottomPanel.add(closeButton);
 		bottomPanel.add(messageBox);
 		return bottomPanel;
+	}
+	
+	@Override
+	protected JComponent createRightPanel(JComponent messageBox) {
+		//(LocalizedString.getString(getClass(), "SHOW_ICONS")); //$NON-NLS-1$
+		
+		JPanel rightPanel = new JPanel();
+		rightPanel.setLayout(new GridLayout(6, 1));
+		JRadioButton formation1 = new JRadioButton("formation 1", true);
+		formation1.setActionCommand("VFormation");
+		formation1.addActionListener(this);
+		
+		JRadioButton formation2 = new JRadioButton("formation 2");
+		formation2.setActionCommand("LineFormation");
+		formation2.addActionListener(this);
+		
+		
+		ButtonGroup group = new ButtonGroup();
+		group.add(formation1);
+		group.add(formation2);
+		rightPanel.add(formation1);
+		rightPanel.add(formation2);
+		rightPanel.add(messageBox);
+		
+		return rightPanel;
+	}
+	
+	
+	public void actionPerformed (ActionEvent e) {
+		System.out.println(e.getActionCommand());
 	}
 	
 	/** Paint an icon and the orientation.
