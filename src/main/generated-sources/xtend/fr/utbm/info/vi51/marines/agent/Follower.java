@@ -67,13 +67,26 @@ public class Follower extends AbstractAnimat {
   @Percept
   public void _handle_Initialize_0(final Initialize occurrence) {
     super._handle_Initialize_0(occurrence);
-    Object _get = occurrence.parameters[3];
-    Formation formation = ((Formation) _get);
-    Object _get_1 = occurrence.parameters[4];
-    FormationAssignment assignment = ((FormationAssignment) _get_1);
-    int index = assignment.allocate(false);
-    FormationSlot _slotAt = formation.getSlotAt(index);
-    this.formationSlot = _slotAt;
+    int index = (-1);
+    int params_length = occurrence.parameters.length;
+    int formation_length = ((params_length - 3) / 2);
+    int i = 4;
+    Formation formation = ((Formation) null);
+    while (((index == (-1)) && ((i + formation_length) < occurrence.parameters.length))) {
+      {
+        Object _get = occurrence.parameters[i];
+        formation = ((Formation) _get);
+        Object _get_1 = occurrence.parameters[(i + formation_length)];
+        FormationAssignment assignment = ((FormationAssignment) _get_1);
+        int _allocate = assignment.allocate(false);
+        index = _allocate;
+        i++;
+      }
+    }
+    if ((index != (-1))) {
+      FormationSlot _slotAt = formation.getSlotAt(index);
+      this.formationSlot = _slotAt;
+    }
     boolean _equals = Objects.equal(this.behaviorType, DynamicType.STEERING);
     if (_equals) {
       SteeringSeekBehaviour _steeringSeekBehaviour = new SteeringSeekBehaviour();

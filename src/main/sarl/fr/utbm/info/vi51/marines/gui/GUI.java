@@ -190,6 +190,8 @@ public class GUI extends AbstractFrameworkGUI {
 				icon = LEADER_ICON;
 			} else if ("FOLLOWER".equals(type)) {
 				icon = FOLLOWER_ICON;
+			} else if ("LEADER-CHIEF".equals(type)) {
+				icon = ROCK_ICON;
 			}
 			if (icon != null) {
 				paintIcon(g2d, icon, positionOnScreen, orientationOnScreen);

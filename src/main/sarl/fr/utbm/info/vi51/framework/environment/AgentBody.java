@@ -35,7 +35,8 @@ import fr.utbm.info.vi51.framework.util.LocalizedString;
  * @version $Name$ $Revision$ $Date$
  */
 public class AgentBody extends AbstractMobileObject implements Body {
-
+	//TODO : integrate an integer defining the formation he belong
+	
 	private static final long serialVersionUID = -4636419559142339321L;
 	
 	private final UUID id;
