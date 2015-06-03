@@ -2,6 +2,7 @@ package fr.utbm.info.vi51.framework.environment
 
 import fr.utbm.info.vi51.framework.time.TimePercept
 import java.util.List
+import fr.utbm.info.vi51.marines.formation.Formation
 
 /** This event contains percepts. 
  *
@@ -11,8 +12,10 @@ event PerceptionEvent {
 	val body : Percept
 	val time : TimePercept
 	val perceptions : List<Percept>
-	new (p : List<Percept>, b : Percept, t : TimePercept) {
+	val formations: List<Formation>
+	new (p : List<Percept>, f : List<Formation>, b : Percept, t : TimePercept) {
 		this.perceptions = p
+		this.formations = f
 		this.body = b
 		this.time = t
 	}

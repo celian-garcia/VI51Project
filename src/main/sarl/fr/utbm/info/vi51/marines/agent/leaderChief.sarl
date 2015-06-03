@@ -35,6 +35,11 @@ agent LeaderChief extends Leader {
 		// Adopt a leader behaviour
 		super._handle_PerceptionEvent_1(occurrence)
 		
+		// 
+		if (!occurrence.formations.empty) {
+			this.chiefFormation = occurrence.formations.get(0);
+		}
+		
 		// But also a MasterChief behaviour
 		this.chiefFormation.globalPosition = occurrence.body.position
 		this.chiefFormation.globalOrientation = occurrence.body.direction

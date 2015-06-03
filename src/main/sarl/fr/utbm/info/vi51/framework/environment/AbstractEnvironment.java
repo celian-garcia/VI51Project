@@ -31,6 +31,7 @@ import fr.utbm.info.vi51.framework.math.Point2f;
 import fr.utbm.info.vi51.framework.math.Vector2f;
 import fr.utbm.info.vi51.framework.time.TimeManager;
 import fr.utbm.info.vi51.framework.util.CollectionUtil;
+import fr.utbm.info.vi51.marines.formation.Formation;
 
 /**
  * Abstract implementation of a situated environment.  

@@ -47,7 +47,7 @@ public class MainProgram {
 
 	private static float WORLD_SIZE_X = 1400;
 	private static float WORLD_SIZE_Y = 700;
-	private static int SLOT_COUNT = 10;
+	public static int SLOT_COUNT = 10;
 	
 	/** Main program.
 	 * 

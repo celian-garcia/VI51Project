@@ -27,6 +27,7 @@ import fr.utbm.info.vi51.framework.math.MathUtil;
 import fr.utbm.info.vi51.framework.math.Shape2f;
 import fr.utbm.info.vi51.framework.math.Vector2f;
 import fr.utbm.info.vi51.framework.util.LocalizedString;
+import fr.utbm.info.vi51.marines.formation.Formation;
 
 /**
  * Object on the environment.
@@ -45,6 +46,7 @@ public class AgentBody extends AbstractMobileObject implements Body {
 	private transient MotionInfluence motionInfluence = null;
 	private transient List<Influence> otherInfluences = new ArrayList<>();
 	private transient List<Percept> perceptions = Collections.emptyList();
+	private transient List<Formation> formations = Collections.emptyList();
 
 	/**
 	 * @param id
@@ -210,6 +212,14 @@ public class AgentBody extends AbstractMobileObject implements Body {
 	public List<Percept> getPerceivedObjects() {
 		return new ArrayList<>(this.perceptions);
 	}
+	
+	/** Replies all the perceived formations.
+	 * 
+	 * @return the perceived formations.
+	 */
+	public List<Formation> getPerceivedFormations() {
+		return new ArrayList<>(this.formations);
+	}
 
 	/** Replies the influence.
 	 * 
@@ -242,6 +252,15 @@ public class AgentBody extends AbstractMobileObject implements Body {
 	void setPerceptions(List<Percept> perceptions) {
 		assert(perceptions!=null);
 		this.perceptions = perceptions;
+	}
+	
+	/** Set the formations.
+	 * 
+	 * @param formations
+	 */
+	public void setFormations(List<Formation> formations) {
+		assert(formations!=null);
+		this.formations = formations;
 	}
 
 }

@@ -40,6 +40,12 @@ public class LeaderChief extends Leader {
   public void _handle_PerceptionEvent_1(final PerceptionEvent occurrence) {
     if (_guard_PerceptionEvent_1(occurrence)) {
       super._handle_PerceptionEvent_1(occurrence);
+      boolean _isEmpty = occurrence.formations.isEmpty();
+      boolean _not = (!_isEmpty);
+      if (_not) {
+        Formation _get = occurrence.formations.get(0);
+        this.chiefFormation = _get;
+      }
       Point2f _position = occurrence.body.getPosition();
       this.chiefFormation.setGlobalPosition(_position);
       Vector2f _direction = occurrence.body.getDirection();

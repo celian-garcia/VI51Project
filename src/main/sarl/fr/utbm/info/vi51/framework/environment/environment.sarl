@@ -78,6 +78,7 @@ agent EnvironmentAgent {
 			run = true
 			var ^event = new PerceptionEvent(
 				body.perceivedObjects,
+				body.perceivedFormations,
 				new Percept(body),
 				timePercept)
 			^event.source = this.myAdr

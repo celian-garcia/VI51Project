@@ -19,8 +19,10 @@
 package fr.utbm.info.vi51.framework.environment;
 
 import java.io.Serializable;
+import java.util.List;
 
 import fr.utbm.info.vi51.framework.math.Point2f;
+import fr.utbm.info.vi51.marines.formation.Formation;
 
 /**
  * Object on the environment.

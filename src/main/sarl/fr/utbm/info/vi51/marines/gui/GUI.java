@@ -32,6 +32,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,6 +46,10 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 
+import fr.utbm.info.vi51.framework.environment.AgentBody;
+import fr.utbm.info.vi51.framework.environment.MobileObject;
+import fr.utbm.info.vi51.framework.environment.SituatedObject;
+import fr.utbm.info.vi51.framework.environment.WorldModelState;
 import fr.utbm.info.vi51.framework.gui.AbstractFrameworkGUI;
 import fr.utbm.info.vi51.framework.math.Point2f;
 import fr.utbm.info.vi51.framework.math.Vector2f;
@@ -54,6 +59,8 @@ import fr.utbm.info.vi51.framework.util.Resources;
 import fr.utbm.info.vi51.marines.MainProgram;
 import fr.utbm.info.vi51.marines.formation.Formation;
 import fr.utbm.info.vi51.marines.formation.FormationSlot;
+import fr.utbm.info.vi51.marines.formation.LineFormation;
+import fr.utbm.info.vi51.marines.formation.VFormation;
 
 /** UI for the rabbits.
  * @author St&eacute;phane GALLAND &lt;stephane.galland@utbm.fr&gt;
@@ -187,6 +194,30 @@ public class GUI extends AbstractFrameworkGUI implements ActionListener{
 	
 	public void actionPerformed (ActionEvent e) {
 		System.out.println(e.getActionCommand());
+		
+		List <Formation> listf = new ArrayList<>();
+		
+		switch (e.getActionCommand()) {
+		case "VFormation":
+			listf.add(new VFormation(MainProgram.SLOT_COUNT));
+			break;
+		case "LineFormation":
+			listf.add(new LineFormation(MainProgram.SLOT_COUNT));
+			break;
+		}
+		
+		WorldModelState state = getLastState();
+		if (state!=null) {
+			
+			for (SituatedObject o : state.getObjects()) {
+				if (o instanceof AgentBody) {
+					AgentBody b = (AgentBody)o;
+					b.setFormations(listf);
+				}
+			}
+		
+		}
+		
 	}
 	
 	/** Paint an icon and the orientation.
