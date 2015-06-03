@@ -36,22 +36,24 @@ public class SurroundFormation extends Formation{
 			}//leader
 		else if((spotCount+3)%4 ==0){ //leader at the center and the others forming a square around it 
 			int nb=Math.floorDiv(spotCount+3, 4);
+			float angle = MathUtil.PI / nb / spotCount;
+			angle = (spotIndex - 1) * angle;
 			if(spotIndex ==1){
-				newSpot = new FormationSlot(0,-INTER_SLOT_SPACE*(spotCount-1)/8,0,getSlotAt(0),spotIndex);
+				newSpot = new FormationSlot(0,-INTER_SLOT_SPACE*(spotCount-1)/8,angle,getSlotAt(0),spotIndex);
 				}
 			else if(spotIndex <= nb-((spotCount-1)/8)){
-				newSpot = new FormationSlot(INTER_SLOT_SPACE*(spotIndex-1),0,0,getSlotAt(1),spotIndex);
+				newSpot = new FormationSlot(INTER_SLOT_SPACE*(spotIndex-1),0,angle,getSlotAt(1),spotIndex);
 			}
 			else if(spotIndex<=nb*2-((spotCount-1)/8)-1){
-				newSpot = new FormationSlot(0,INTER_SLOT_SPACE,0,getSlotAt(spotIndex-1),spotIndex);
+				newSpot = new FormationSlot(0,INTER_SLOT_SPACE,angle,getSlotAt(spotIndex-1),spotIndex);
 			}
 			else if(spotIndex<=nb*3-((spotCount-1)/8)-2){
-				newSpot = new FormationSlot(-INTER_SLOT_SPACE,0,0,getSlotAt(spotIndex-1),spotIndex);
+				newSpot = new FormationSlot(-INTER_SLOT_SPACE,0,angle,getSlotAt(spotIndex-1),spotIndex);
 			}
 			else if(spotIndex<=nb*4-((spotCount-1)/8)-3){
-				newSpot = new FormationSlot(0,-INTER_SLOT_SPACE,0,getSlotAt(spotIndex-1),spotIndex);
+				newSpot = new FormationSlot(0,-INTER_SLOT_SPACE,angle,getSlotAt(spotIndex-1),spotIndex);
 			}
-			else newSpot= new FormationSlot(INTER_SLOT_SPACE,0,0,getSlotAt(spotIndex-1),spotIndex);
+			else newSpot= new FormationSlot(INTER_SLOT_SPACE,0,angle,getSlotAt(spotIndex-1),spotIndex);
 			}
 		
 		else { //leader at the center and the others forming a circle around it

@@ -1,6 +1,7 @@
 package fr.utbm.info.vi51.marines.formation;
 
 
+import fr.utbm.info.vi51.framework.math.MathUtil;
 import fr.utbm.info.vi51.framework.util.LocalizedString;
 
 public class RectangleFormation extends Formation{
@@ -36,15 +37,9 @@ public static final float INTER_SLOT_SPACE = 50f;
 		if (spotIndex==0) {
 			newSpot = new FormationSlot(); // leader
 		}
-<<<<<<< HEAD
-		else if((spotCount+1)%4 ==0){ //square
+		else if((spotCount)%4 ==0){ //square
 			FormationSlot parent = getSlotAt(0);
 			int nb = (spotCount)/4; //nb of rabbit in each line
-=======
-		else if((spotCount+1)%4 ==0){
-			FormationSlot parent = getSlotAt(0);
-			int nb = (spotCount+1)/4;
->>>>>>> origin/master
 			if(spotIndex <= nb){
 				newSpot = new FormationSlot(0,-INTER_SLOT_SPACE*spotIndex,0,parent,spotIndex);
 			}
@@ -60,7 +55,6 @@ public static final float INTER_SLOT_SPACE = 50f;
 
 		}
 		
-<<<<<<< HEAD
 		else{ // rectangle whose size is nb*(nb+1)
 			FormationSlot parent = getSlotAt(0);
 			int nb = (spotCount+2)/4;
@@ -71,18 +65,6 @@ public static final float INTER_SLOT_SPACE = 50f;
 				newSpot = new FormationSlot(INTER_SLOT_SPACE,0,0,getSlotAt(spotIndex-1),spotIndex);
 			}
 			else if(spotIndex<=nb*3-2){
-=======
-		else{
-			FormationSlot parent = getSlotAt(0);
-			int nb = (spotCount+1)/4;
-			if(spotIndex <= nb){
-				newSpot = new FormationSlot(0,-INTER_SLOT_SPACE*spotIndex,0,parent,spotIndex);
-			}
-			else if(spotIndex<=nb*2+1){
-				newSpot = new FormationSlot(INTER_SLOT_SPACE,0,0,getSlotAt(spotIndex-1),spotIndex);
-			}
-			else if(spotIndex<=nb*3+1){
->>>>>>> origin/master
 				newSpot = new FormationSlot(0,INTER_SLOT_SPACE,0,getSlotAt(spotIndex-1),spotIndex);
 			}
 			else {

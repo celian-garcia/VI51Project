@@ -1,24 +1,22 @@
 package fr.utbm.info.vi51.marines.formation;
 
-
 import fr.utbm.info.vi51.framework.math.MathUtil;
 import fr.utbm.info.vi51.framework.math.Vector2f;
 import fr.utbm.info.vi51.framework.util.LocalizedString;
 
-public class LineFormation extends Formation{
-
-public static final float INTER_SLOT_SPACE = 200f;
+public class CircleFormation extends Formation{
+public static final float INTER_SLOT_SPACE = 50f;
 	
 	/**
 	 */
-	public LineFormation() {
+	public CircleFormation() {
 		scale(1);
 	}
 	
 	/**
 	 * @param slotCount is the count of slots in the formation.
 	 */
-	public LineFormation(int slotCount) {
+	public CircleFormation(int slotCount) {
 		scale(slotCount);
 	}
 	
@@ -26,7 +24,7 @@ public static final float INTER_SLOT_SPACE = 200f;
 	 */
 	@Override
 	public String toString() {
-		return LocalizedString.getString(LineFormation.class, "NAME", getSlots().size()); //$NON-NLS-1$
+		return LocalizedString.getString(BodyGuardFormation.class, "NAME", getSlots().size()); //$NON-NLS-1$
 	}
 
 	/**
@@ -40,18 +38,14 @@ public static final float INTER_SLOT_SPACE = 200f;
 			newSpot = new FormationSlot(); // leader
 		}
 		else {
-			FormationSlot parent = getSlotAt(0);
-			if (spotIndex%2==0){
-				newSpot = new FormationSlot(0,-INTER_SLOT_SPACE*spotIndex/2,0,parent,spotIndex);
-			}
-			else{
-				newSpot = new FormationSlot(0,INTER_SLOT_SPACE*(spotIndex+1)/2,0,parent,spotIndex);
-			}
-				
+			
+			float angle = MathUtil.PI *2f / spotCount;
+			angle = (spotIndex - 1) * angle;
+			Vector2f v = Vector2f.toOrientationVector(angle);
+			v.scale(INTER_SLOT_SPACE);
+			newSpot = new FormationSlot(v.getX(), v.getY(), angle/spotCount, getSlotAt(spotIndex-1), spotIndex);
 		}
 		
 		return newSpot;
 	}
-
-
 }

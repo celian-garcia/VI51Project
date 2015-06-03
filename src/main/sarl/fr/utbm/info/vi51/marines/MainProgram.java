@@ -32,16 +32,14 @@ import fr.utbm.info.vi51.marines.agent.LeaderChief;
 import fr.utbm.info.vi51.marines.agent.SubLeader;
 import fr.utbm.info.vi51.marines.environment.WorldModel;
 import fr.utbm.info.vi51.marines.formation.BodyGuardFormation;
+import fr.utbm.info.vi51.marines.formation.CircleFormation;
 import fr.utbm.info.vi51.marines.formation.CrossFormation;
 import fr.utbm.info.vi51.marines.formation.DeltaFormation;
 import fr.utbm.info.vi51.marines.formation.Formation;
 import fr.utbm.info.vi51.marines.formation.FormationAssignment;
 import fr.utbm.info.vi51.marines.formation.LineFormation;
 import fr.utbm.info.vi51.marines.formation.RectangleFormation;
-<<<<<<< HEAD
 import fr.utbm.info.vi51.marines.formation.SurroundFormation;
-=======
->>>>>>> origin/master
 import fr.utbm.info.vi51.marines.formation.VFormation;
 import fr.utbm.info.vi51.marines.gui.GUI;
 
@@ -53,7 +51,7 @@ public class MainProgram {
 
 	private static float WORLD_SIZE_X = 1400;
 	private static float WORLD_SIZE_Y = 700;
-	private static int SLOT_COUNT = 9;
+	private static int SLOT_COUNT = 6;
 	
 	/** Main program.
 	 * 
@@ -72,24 +70,14 @@ public class MainProgram {
 		// Initialize formations and assignments
 		// First formation is the master formation 
 		// Others formation are the leader formations
-<<<<<<< HEAD
 
 		Formation[] formations = new Formation[]{
 				new LineFormation(5),
-				new CrossFormation (SLOT_COUNT),
-				new DeltaFormation (SLOT_COUNT),
-				new VFormation (SLOT_COUNT),
+				new CircleFormation (SLOT_COUNT),
+				new RectangleFormation (SLOT_COUNT),
+				new RectangleFormation (SLOT_COUNT),
 				new SurroundFormation (SLOT_COUNT),
 				new SurroundFormation (SLOT_COUNT)
-=======
-		Formation[] formations = new Formation[]{
-				new LineFormation(5),
-				new BodyGuardFormation (SLOT_COUNT),
-				new BodyGuardFormation (SLOT_COUNT),
-				new BodyGuardFormation (SLOT_COUNT),
-				new BodyGuardFormation (SLOT_COUNT),
-				new BodyGuardFormation (SLOT_COUNT)
->>>>>>> origin/master
 		};
 		FormationAssignment[] formationAssignments = new FormationAssignment[]{
 				new FormationAssignment(5),
@@ -105,15 +93,9 @@ public class MainProgram {
 		
 		environment.createMaster();
 		environment.createLeader();
-<<<<<<< HEAD
 		environment.createLeader();
 		environment.createLeader();
 		environment.createLeader();
-=======
-		environment.createLeader();
-		environment.createLeader();
-		environment.createLeader();
->>>>>>> origin/master
 
 		environment.createFollower();
 		environment.createFollower();
