@@ -177,7 +177,9 @@ public class GUI extends AbstractFrameworkGUI {
 		formation1.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				GUI.this.environment.setMasterFormation(new VFormation(MainProgram.SLOT_COUNT));
+				Formation f = new VFormation(MainProgram.MASTER_SLOT_COUNT);
+				GUI.this.environment.setMasterFormation(f);
+				GUI.this.formations.set(0, f);
 			}
 		});
 		
@@ -186,7 +188,9 @@ public class GUI extends AbstractFrameworkGUI {
 		formation2.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				GUI.this.environment.setMasterFormation(new LineFormation(MainProgram.SLOT_COUNT));
+				Formation f = new LineFormation(MainProgram.MASTER_SLOT_COUNT);
+				GUI.this.environment.setMasterFormation(f);
+				GUI.this.formations.set(0, f);
 			}
 		});
 		
@@ -236,7 +240,7 @@ public class GUI extends AbstractFrameworkGUI {
 				icon = LEADER_ICON;
 			} else if ("FOLLOWER".equals(type)) {
 				icon = FOLLOWER_ICON;
-			} else if ("LEADER-CHIEF".equals(type)) {
+			} else if ("MASTER".equals(type)) {
 				icon = ROCK_ICON;
 			}
 			if (icon != null) {

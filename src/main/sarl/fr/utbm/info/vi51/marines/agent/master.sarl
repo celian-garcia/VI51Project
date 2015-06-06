@@ -42,6 +42,8 @@ agent Master extends AbstractCommander {
 	
 	on PerceptionEvent [ occurrence.perceptions.empty ] {
 		
+		this.updateOwnMasterFormation(occurrence.formations)
+		
 		// Adopt a Leader behaviour
 		this.ownFormation.globalPosition = occurrence.body.position
 		this.ownFormation.globalOrientation = occurrence.body.direction	
@@ -62,6 +64,8 @@ agent Master extends AbstractCommander {
 	
 	
 	on PerceptionEvent [ !occurrence.perceptions.empty ] {
+		
+		this.updateOwnMasterFormation(occurrence.formations)
 		
 		// Adopt a Leader behaviour
 		this.ownFormation.globalPosition = occurrence.body.position

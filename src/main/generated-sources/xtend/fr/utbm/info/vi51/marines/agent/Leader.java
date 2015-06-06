@@ -53,6 +53,11 @@ public class Leader extends AbstractCommander {
   
   @Percept
   public void _handle_PerceptionEvent_1(final PerceptionEvent occurrence) {
+    int index = this.updateFollowedFormation(occurrence.formations);
+    if ((index != (-1))) {
+      FormationSlot _slotAt = this.followedFormation.getSlotAt(index);
+      this.slot = _slotAt;
+    }
     Point2f _position = occurrence.body.getPosition();
     this.ownFormation.setGlobalPosition(_position);
     Vector2f _direction = occurrence.body.getDirection();

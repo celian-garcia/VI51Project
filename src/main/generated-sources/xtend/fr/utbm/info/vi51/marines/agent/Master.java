@@ -59,6 +59,7 @@ public class Master extends AbstractCommander {
   @Percept
   public void _handle_PerceptionEvent_1(final PerceptionEvent occurrence) {
     if (_guard_PerceptionEvent_1(occurrence)) {
+      this.updateOwnMasterFormation(occurrence.formations);
       Point2f _position = occurrence.body.getPosition();
       this.ownFormation.setGlobalPosition(_position);
       Vector2f _direction = occurrence.body.getDirection();
@@ -88,6 +89,7 @@ public class Master extends AbstractCommander {
   @Percept
   public void _handle_PerceptionEvent_2(final PerceptionEvent occurrence) {
     if (_guard_PerceptionEvent_2(occurrence)) {
+      this.updateOwnMasterFormation(occurrence.formations);
       Point2f _position = occurrence.body.getPosition();
       this.ownFormation.setGlobalPosition(_position);
       Vector2f _direction = occurrence.body.getDirection();

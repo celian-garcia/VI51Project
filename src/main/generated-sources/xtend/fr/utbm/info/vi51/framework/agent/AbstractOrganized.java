@@ -1,5 +1,6 @@
 package fr.utbm.info.vi51.framework.agent;
 
+import com.google.common.base.Objects;
 import fr.utbm.info.vi51.framework.agent.AbstractAnimat;
 import fr.utbm.info.vi51.marines.formation.Formation;
 import io.sarl.core.Initialize;
@@ -103,10 +104,37 @@ public class AbstractOrganized extends AbstractAnimat {
     this.ownMasterFormation = ((Formation) formation);
   }
   
-  public void updateFollowedFormation(final Formation formation) {
+  public int updateFollowedFormation(final List<Formation> formations) {
+    int index = (-1);
+    boolean _isEmpty = formations.isEmpty();
+    boolean _not = (!_isEmpty);
+    if (_not) {
+      Formation _get = formations.get(0);
+      boolean _notEquals = (!Objects.equal(_get, null));
+      if (_notEquals) {
+        Formation _get_1 = formations.get(0);
+        this.followedFormation = _get_1;
+        int _allocate = this.followedFormation.allocate(false);
+        index = _allocate;
+      }
+    }
+    return index;
   }
   
   public void updateOwnFormation(final Formation formation) {
+  }
+  
+  public void updateOwnMasterFormation(final List<Formation> formations) {
+    boolean _isEmpty = formations.isEmpty();
+    boolean _not = (!_isEmpty);
+    if (_not) {
+      Formation _get = formations.get(0);
+      boolean _notEquals = (!Objects.equal(_get, null));
+      if (_notEquals) {
+        Formation _get_1 = formations.get(0);
+        this.ownMasterFormation = _get_1;
+      }
+    }
   }
   
   /**

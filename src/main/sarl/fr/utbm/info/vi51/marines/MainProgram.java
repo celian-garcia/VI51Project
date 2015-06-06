@@ -46,6 +46,7 @@ public class MainProgram {
 	private static float WORLD_SIZE_X = 1400;
 	private static float WORLD_SIZE_Y = 700;
 	public static int SLOT_COUNT = 10;
+	public static int MASTER_SLOT_COUNT = 5;
 	
 	/** Main program.
 	 * 
@@ -65,7 +66,7 @@ public class MainProgram {
 		// First formation is the master formation 
 		// Others formation are the leader formations
 		Formation[] formations = new Formation[]{
-				new LineFormation(5),
+				new LineFormation(MASTER_SLOT_COUNT),
 				new BodyGuardFormation (SLOT_COUNT),
 				new BodyGuardFormation (SLOT_COUNT),
 				new BodyGuardFormation (SLOT_COUNT),

@@ -42,6 +42,9 @@ agent Leader extends AbstractCommander {
 
 	on PerceptionEvent {
 		
+		var index = this.updateFollowedFormation(occurrence.formations)
+		if (index != -1) this.slot = this.followedFormation.getSlotAt(index)
+		
 		this.ownFormation.globalPosition = occurrence.body.position
 		this.ownFormation.globalOrientation = occurrence.body.direction	
 	

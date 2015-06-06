@@ -150,11 +150,24 @@ agent AbstractOrganized extends AbstractAnimat {
 		this.ownMasterFormation = formation as Formation
 	}
 	
-	def updateFollowedFormation (formation : Formation) {
-		//TODO : 
+	def updateFollowedFormation (formations : List<Formation>) : int {
+		var index = -1;
+		if (!formations.empty) {
+			if (formations.get(0) != null) {
+				this.followedFormation = formations.get(0)
+				index = this.followedFormation.allocate(false)
+			}
+		}
+		return index
 	}
 	
 	def updateOwnFormation (formation : Formation) {
 		//TODO : 
+	}
+	
+	def updateOwnMasterFormation (formations : List<Formation>) {
+		if (!formations.empty)
+			if (formations.get(0) != null)
+				this.ownMasterFormation = formations.get(0)
 	}
 }
