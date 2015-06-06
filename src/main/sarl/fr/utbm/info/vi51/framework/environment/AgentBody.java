@@ -71,6 +71,7 @@ public class AgentBody extends AbstractMobileObject implements Body {
 		clone.motionInfluence = null;
 		clone.otherInfluences = new ArrayList<>();
 		clone.perceptions = new ArrayList<>();
+		clone.formations = new ArrayList<>();
 		return clone;
 	}
 
@@ -258,8 +259,9 @@ public class AgentBody extends AbstractMobileObject implements Body {
 	 * 
 	 * @param formations
 	 */
-	public void setFormations(List<Formation> formations) {
+	void setFormations(List<Formation> formations) {
 		assert(formations!=null);
+//		System.out.println(formations.toString());
 		this.formations = formations;
 	}
 

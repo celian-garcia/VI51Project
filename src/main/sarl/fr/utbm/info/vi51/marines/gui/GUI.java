@@ -66,7 +66,7 @@ import fr.utbm.info.vi51.marines.formation.VFormation;
  * @author St&eacute;phane GALLAND &lt;stephane.galland@utbm.fr&gt;
  * @version $Name$ $Revision$ $Date$
  */
-public class GUI extends AbstractFrameworkGUI implements ActionListener{
+public class GUI extends AbstractFrameworkGUI {
 
 	private static final long serialVersionUID = 7958401897774129069L;
 
@@ -172,13 +172,23 @@ public class GUI extends AbstractFrameworkGUI implements ActionListener{
 		
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new GridLayout(6, 1));
-		JRadioButton formation1 = new JRadioButton("formation 1", true);
+		JRadioButton formation1 = new JRadioButton("V Formation", true);
 		formation1.setActionCommand("VFormation");
-		formation1.addActionListener(this);
+		formation1.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GUI.this.environment.setMasterFormation(new VFormation(MainProgram.SLOT_COUNT));
+			}
+		});
 		
-		JRadioButton formation2 = new JRadioButton("formation 2");
+		JRadioButton formation2 = new JRadioButton("Line Formation");
 		formation2.setActionCommand("LineFormation");
-		formation2.addActionListener(this);
+		formation2.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GUI.this.environment.setMasterFormation(new LineFormation(MainProgram.SLOT_COUNT));
+			}
+		});
 		
 		
 		ButtonGroup group = new ButtonGroup();
@@ -191,34 +201,6 @@ public class GUI extends AbstractFrameworkGUI implements ActionListener{
 		return rightPanel;
 	}
 	
-	
-	public void actionPerformed (ActionEvent e) {
-		System.out.println(e.getActionCommand());
-		
-		List <Formation> listf = new ArrayList<>();
-		
-		switch (e.getActionCommand()) {
-		case "VFormation":
-			listf.add(new VFormation(MainProgram.SLOT_COUNT));
-			break;
-		case "LineFormation":
-			listf.add(new LineFormation(MainProgram.SLOT_COUNT));
-			break;
-		}
-		
-		WorldModelState state = getLastState();
-		if (state!=null) {
-			
-			for (SituatedObject o : state.getObjects()) {
-				if (o instanceof AgentBody) {
-					AgentBody b = (AgentBody)o;
-					b.setFormations(listf);
-				}
-			}
-		
-		}
-		
-	}
 	
 	/** Paint an icon and the orientation.
 	 * 

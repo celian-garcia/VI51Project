@@ -1,6 +1,5 @@
 package fr.utbm.info.vi51.marines.^agent
 
-import fr.utbm.info.vi51.framework.^agent.AbstractAnimat
 import fr.utbm.info.vi51.framework.^agent.PhysicEnvironment
 import fr.utbm.info.vi51.framework.environment.DynamicType
 import fr.utbm.info.vi51.framework.environment.PerceptionEvent
@@ -16,17 +15,17 @@ import fr.utbm.info.vi51.marines.^behavior.steering.SteeringAlignBehaviour
 import fr.utbm.info.vi51.marines.^behavior.steering.SteeringFaceBehaviour
 import fr.utbm.info.vi51.marines.^behavior.steering.SteeringSeekBehaviour
 import fr.utbm.info.vi51.marines.^behavior.steering.SteeringWanderBehaviour
-import fr.utbm.info.vi51.marines.formation.Formation
-import fr.utbm.info.vi51.marines.formation.FormationAssignment
-import fr.utbm.info.vi51.marines.formation.FormationSlot
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
+import fr.utbm.info.vi51.framework.^agent.AbstractOrganized
+import fr.utbm.info.vi51.marines.formation.FormationSlot
 
-agent Follower extends AbstractAnimat {
+agent Follower extends AbstractOrganized {
 	
 	uses PhysicEnvironment, Lifecycle, DefaultContextInteractions
 	
+	var slot : FormationSlot
 	var seekBehaviour : SeekBehaviour
 	var alignBehaviour : AlignBehaviour
 	var wanderBehaviour : WanderBehaviour
@@ -38,30 +37,15 @@ agent Follower extends AbstractAnimat {
 	val WANDER_CIRCLE_RADIUS = 10f
 	val WANDER_MAX_ROTATION = MathUtil.PI/4f
 	
-	var formationSlot : FormationSlot
 	
 	on Initialize {
 		super._handle_Initialize_0(occurrence)
 		
-		var index = -1;
-		var params_length = occurrence.parameters.length();
-		var formation_length = (params_length - 3) / 2;
-		var i = 4;
-		var formation = null as Formation;
-		
-		// search for a formation o integrate 
-		while(index == -1 && i + formation_length < occurrence.parameters.length) {
-			formation = occurrence.parameters.get(i) as Formation
-			var assignment = occurrence.parameters.get(i + formation_length) as FormationAssignment
-			index = assignment.allocate(false)
-			
-			i++;
-		}
-		
-		if(index != -1) {
-			this.formationSlot = formation.getSlotAt(index)
-		}
-		
+		// Leader formations are given from 4 to the end of parameters 
+		var start = 4
+		var end = occurrence.parameters.length
+		var index = this.initializeFollowedFormation(occurrence.parameters.subList(start, end))
+		this.slot = this.followedFormation.getSlotAt(index)
 		
 		if (this.behaviorType == DynamicType::STEERING) {
 			this.seekBehaviour = new SteeringSeekBehaviour
@@ -83,7 +67,8 @@ agent Follower extends AbstractAnimat {
 	}
 	
 	on PerceptionEvent {
-		if (this.formationSlot === null) {
+		// No formation slot found
+		if (this.slot === null) {
 			this.wanderBehaviour.runWander(
 				occurrence.body.position,
 				occurrence.body.direction,
@@ -92,8 +77,10 @@ agent Follower extends AbstractAnimat {
 				occurrence.body.currentAngularSpeed,
 				occurrence.body.maxAngular
 			).emitInfluence			
-		} else {
-			var position = this.formationSlot.globalPosition
+		}
+		// else follower follow the formation slot
+		else {
+			var position = this.slot.globalPosition
 			var bo1 = this.seekBehaviour.runSeek(
 				occurrence.body.position,
 				occurrence.body.currentLinearSpeed,
@@ -121,7 +108,7 @@ agent Follower extends AbstractAnimat {
 			v.scale(occurrence.body.maxLinear)
 			bo1.linear = v
 			
-			var orientation = this.formationSlot.globalOrientation
+			var orientation = this.slot.globalOrientation
 			bo1.angular = this.alignBehaviour.runAlign(
 				occurrence.body.direction,
 				occurrence.body.currentAngularSpeed,

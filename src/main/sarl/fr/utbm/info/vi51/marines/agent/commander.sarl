@@ -1,0 +1,56 @@
+package fr.utbm.info.vi51.marines.^agent
+
+import fr.utbm.info.vi51.framework.^agent.PhysicEnvironment
+import fr.utbm.info.vi51.framework.environment.DynamicType
+import fr.utbm.info.vi51.framework.math.MathUtil
+import fr.utbm.info.vi51.marines.^behavior.SeekBehaviour
+import fr.utbm.info.vi51.marines.^behavior.WanderBehaviour
+import fr.utbm.info.vi51.marines.^behavior.kinematic.KinematicSeekBehaviour
+import fr.utbm.info.vi51.marines.^behavior.kinematic.KinematicWanderBehaviour
+import fr.utbm.info.vi51.marines.^behavior.steering.SteeringAlignBehaviour
+import fr.utbm.info.vi51.marines.^behavior.steering.SteeringFaceBehaviour
+import fr.utbm.info.vi51.marines.^behavior.steering.SteeringSeekBehaviour
+import fr.utbm.info.vi51.marines.^behavior.steering.SteeringWanderBehaviour
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import fr.utbm.info.vi51.marines.^behavior.AlignBehaviour
+import fr.utbm.info.vi51.marines.^behavior.kinematic.KinematicAlignBehaviour
+import fr.utbm.info.vi51.framework.^agent.AbstractOrganized
+
+agent AbstractCommander extends AbstractOrganized {
+	
+	uses PhysicEnvironment, Lifecycle
+	
+	var seekBehaviour : SeekBehaviour
+	var alignBehaviour : AlignBehaviour
+	var wanderBehaviour : WanderBehaviour
+	
+	val STOP_DISTANCE = 3f
+	val STOP_RADIUS = MathUtil.PI/10f
+	val SLOW_RADIUS = MathUtil.PI/4f
+	val WANDER_CIRCLE_DISTANCE = 20f
+	val WANDER_CIRCLE_RADIUS = 10f
+	val WANDER_MAX_ROTATION = MathUtil.PI/4f
+	
+	on Initialize {
+		super._handle_Initialize_0(occurrence)
+		
+		if (this.behaviorType == DynamicType::STEERING) {
+			this.seekBehaviour = new SteeringSeekBehaviour
+			var alignB = new SteeringAlignBehaviour(STOP_RADIUS, SLOW_RADIUS)
+			var faceB = new SteeringFaceBehaviour(STOP_DISTANCE, alignB)
+			this.alignBehaviour = alignB
+			this.wanderBehaviour = new SteeringWanderBehaviour(
+					WANDER_CIRCLE_DISTANCE, 
+					WANDER_CIRCLE_RADIUS, 
+					WANDER_MAX_ROTATION,
+					faceB)
+		}
+		else {
+			this.seekBehaviour =  new KinematicSeekBehaviour
+			this.alignBehaviour = new KinematicAlignBehaviour(STOP_RADIUS)
+			this.wanderBehaviour = new KinematicWanderBehaviour
+		} 
+	}
+
+}

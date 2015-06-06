@@ -87,7 +87,7 @@ public abstract class AbstractFrameworkGUI extends JFrame implements FrameworkGU
 	private final TimeManager timeManager;
 
 	private WorldModelState lastState = null;
-	private WorldModelStateProvider environment = null;
+	protected WorldModelStateProvider environment = null;
 
 	private final JLabel messageBox;
 	private final JLabel formationMessageBox;

@@ -34,6 +34,10 @@ public abstract class Formation {
 
 	private FormationSlot leaderSpot;
 	private final List<FormationSlot> spots;
+	
+	private int nextFreeSlot = 1;
+	private int count;
+	private boolean haveLeader = false;
 
 	/**
 	 */
@@ -88,6 +92,7 @@ public abstract class Formation {
 	 */
 	public void scale(int spotCount) {
 		clear();
+		count = spotCount;
 		FormationSlot spot;
 		for(int i=0; i<spotCount; i++) {
 			spot = createSpot(i,spotCount);
@@ -152,6 +157,28 @@ public abstract class Formation {
 			return this.leaderSpot.getGlobalPosition();
 		}
 		return new Point2f();
+	}
+	
+	/** Allocate the next free slot.
+	 * 
+	 * @param isLeader indicates if the caller is the leader or a follower.
+	 * @return the index of the next free slot.
+	 */
+	public synchronized int allocate(boolean isLeader) {
+		if (isLeader) {
+			haveLeader = true;
+			return 0;
+		}
+		
+		if (nextFreeSlot < count) {
+			return this.nextFreeSlot++;
+		}
+		
+		return -1;
+	}
+	
+	public synchronized boolean haveLeader(){
+		return haveLeader;
 	}
 
 }

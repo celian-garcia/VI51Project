@@ -10,6 +10,7 @@ import io.sarl.lang.core.Address
 import io.sarl.util.OpenEventSpace
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
+import io.sarl.core.Logging
 
 /** This agent is managing the physic space. 
  *
@@ -17,7 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 agent EnvironmentAgent {
 	
-	uses DefaultContextInteractions, Lifecycle, Behaviors
+	uses DefaultContextInteractions, Lifecycle, Behaviors, Logging
 
 	var environment : Environment
 	var space : OpenEventSpace
@@ -76,6 +77,7 @@ agent EnvironmentAgent {
 			this.environment.timeManager.lastStepDuration)
 		for(body : this.environment.agentBodies) {
 			run = true
+
 			var ^event = new PerceptionEvent(
 				body.perceivedObjects,
 				body.perceivedFormations,

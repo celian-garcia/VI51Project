@@ -265,10 +265,13 @@ public abstract class AbstractEnvironment implements Environment {
 		this.timeManager.increment();
 		
 		List<Percept> list;
+		List<Formation> flist;
 		for(AgentBody body : this.agentBodies.values()) {
 			list = computePerceptionsFor(body);
+			flist = computeFormationsFor(body);
 			if (list==null) list = Collections.emptyList();
 			body.setPerceptions(list);
+			body.setFormations(flist);
 		}
 	}
 
@@ -284,6 +287,13 @@ public abstract class AbstractEnvironment implements Environment {
 	 * @return the list of the perceived object, never <code>null</code>
 	 */
 	protected abstract List<Percept> computePerceptionsFor(AgentBody agent);
+	
+	/** Compute the formations for an agent body.
+	 * 
+	 * @param agent is the body of the perceiver.
+	 * @return the list of the perceived formations, never <code>null</code>
+	 */
+	protected abstract List<Formation> computeFormationsFor(AgentBody agent);
 		
 	/** Detects conflicts between influences and applied resulting actions.
 	 * 

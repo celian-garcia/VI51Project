@@ -1,7 +1,7 @@
 package fr.utbm.info.vi51.marines.agent;
 
 import com.google.common.base.Objects;
-import fr.utbm.info.vi51.framework.agent.AbstractAnimat;
+import fr.utbm.info.vi51.framework.agent.AbstractOrganized;
 import fr.utbm.info.vi51.framework.agent.BehaviourOutput;
 import fr.utbm.info.vi51.framework.environment.DynamicType;
 import fr.utbm.info.vi51.framework.environment.PerceptionEvent;
@@ -21,8 +21,6 @@ import fr.utbm.info.vi51.marines.behavior.steering.SteeringAlignBehaviour;
 import fr.utbm.info.vi51.marines.behavior.steering.SteeringFaceBehaviour;
 import fr.utbm.info.vi51.marines.behavior.steering.SteeringSeekBehaviour;
 import fr.utbm.info.vi51.marines.behavior.steering.SteeringWanderBehaviour;
-import fr.utbm.info.vi51.marines.formation.Formation;
-import fr.utbm.info.vi51.marines.formation.FormationAssignment;
 import fr.utbm.info.vi51.marines.formation.FormationSlot;
 import io.sarl.core.AgentSpawned;
 import io.sarl.core.DefaultContextInteractions;
@@ -40,10 +38,14 @@ import io.sarl.lang.core.Scope;
 import io.sarl.lang.core.Space;
 import io.sarl.lang.core.SpaceID;
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
+import org.eclipse.xtext.xbase.lib.Conversions;
 
 @SuppressWarnings("all")
-public class Follower extends AbstractAnimat {
+public class Follower extends AbstractOrganized {
+  protected FormationSlot slot;
+  
   protected SeekBehaviour seekBehaviour;
   
   protected AlignBehaviour alignBehaviour;
@@ -62,31 +64,15 @@ public class Follower extends AbstractAnimat {
   
   protected final float WANDER_MAX_ROTATION = (MathUtil.PI / 4f);
   
-  protected FormationSlot formationSlot;
-  
   @Percept
   public void _handle_Initialize_0(final Initialize occurrence) {
     super._handle_Initialize_0(occurrence);
-    int index = (-1);
-    int params_length = occurrence.parameters.length;
-    int formation_length = ((params_length - 3) / 2);
-    int i = 4;
-    Formation formation = ((Formation) null);
-    while (((index == (-1)) && ((i + formation_length) < occurrence.parameters.length))) {
-      {
-        Object _get = occurrence.parameters[i];
-        formation = ((Formation) _get);
-        Object _get_1 = occurrence.parameters[(i + formation_length)];
-        FormationAssignment assignment = ((FormationAssignment) _get_1);
-        int _allocate = assignment.allocate(false);
-        index = _allocate;
-        i++;
-      }
-    }
-    if ((index != (-1))) {
-      FormationSlot _slotAt = formation.getSlotAt(index);
-      this.formationSlot = _slotAt;
-    }
+    int start = 4;
+    int end = occurrence.parameters.length;
+    List<Object> _subList = ((List<Object>)Conversions.doWrapArray(occurrence.parameters)).subList(start, end);
+    int index = this.initializeFollowedFormation(_subList);
+    FormationSlot _slotAt = this.followedFormation.getSlotAt(index);
+    this.slot = _slotAt;
     boolean _equals = Objects.equal(this.behaviorType, DynamicType.STEERING);
     if (_equals) {
       SteeringSeekBehaviour _steeringSeekBehaviour = new SteeringSeekBehaviour();
@@ -113,7 +99,7 @@ public class Follower extends AbstractAnimat {
   
   @Percept
   public void _handle_PerceptionEvent_1(final PerceptionEvent occurrence) {
-    if ((this.formationSlot == null)) {
+    if ((this.slot == null)) {
       Point2f _position = occurrence.body.getPosition();
       Vector2f _direction = occurrence.body.getDirection();
       float _currentLinearSpeed = occurrence.body.getCurrentLinearSpeed();
@@ -123,7 +109,7 @@ public class Follower extends AbstractAnimat {
       BehaviourOutput _runWander = this.wanderBehaviour.runWander(_position, _direction, _currentLinearSpeed, _maxLinear, _currentAngularSpeed, _maxAngular);
       this.emitInfluence(_runWander);
     } else {
-      Point2f position = this.formationSlot.getGlobalPosition();
+      Point2f position = this.slot.getGlobalPosition();
       Point2f _position_1 = occurrence.body.getPosition();
       float _currentLinearSpeed_1 = occurrence.body.getCurrentLinearSpeed();
       float _maxLinear_1 = this.getMaxLinear(occurrence.body);
@@ -151,7 +137,7 @@ public class Follower extends AbstractAnimat {
       float _maxLinear_2 = this.getMaxLinear(occurrence.body);
       v.scale(_maxLinear_2);
       bo1.setLinear(v);
-      Vector2f orientation = this.formationSlot.getGlobalOrientation();
+      Vector2f orientation = this.slot.getGlobalOrientation();
       Vector2f _direction_1 = occurrence.body.getDirection();
       float _currentAngularSpeed_1 = occurrence.body.getCurrentAngularSpeed();
       float _maxAngular_1 = this.getMaxAngular(occurrence.body);
