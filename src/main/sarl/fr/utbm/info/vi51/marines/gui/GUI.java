@@ -32,24 +32,18 @@ import java.io.Serializable;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 
-import fr.utbm.info.vi51.framework.environment.AgentBody;
-import fr.utbm.info.vi51.framework.environment.MobileObject;
-import fr.utbm.info.vi51.framework.environment.SituatedObject;
-import fr.utbm.info.vi51.framework.environment.WorldModelState;
 import fr.utbm.info.vi51.framework.gui.AbstractFrameworkGUI;
 import fr.utbm.info.vi51.framework.math.Point2f;
 import fr.utbm.info.vi51.framework.math.Vector2f;

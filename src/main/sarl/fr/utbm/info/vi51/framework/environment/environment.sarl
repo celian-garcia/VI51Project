@@ -10,7 +10,6 @@ import io.sarl.lang.core.Address
 import io.sarl.util.OpenEventSpace
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
-import io.sarl.core.Logging
 
 /** This agent is managing the physic space. 
  *
@@ -18,7 +17,7 @@ import io.sarl.core.Logging
  */
 agent EnvironmentAgent {
 	
-	uses DefaultContextInteractions, Lifecycle, Behaviors, Logging
+	uses DefaultContextInteractions, Lifecycle, Behaviors
 
 	var environment : Environment
 	var space : OpenEventSpace
