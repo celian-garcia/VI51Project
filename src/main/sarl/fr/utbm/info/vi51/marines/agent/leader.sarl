@@ -1,70 +1,101 @@
+/**
+ * 
+ */
 package fr.utbm.info.vi51.marines.^agent
 
-import fr.utbm.info.vi51.framework.^agent.AbstractAnimat
 import fr.utbm.info.vi51.framework.^agent.PhysicEnvironment
-import fr.utbm.info.vi51.framework.environment.DynamicType
 import fr.utbm.info.vi51.framework.environment.PerceptionEvent
-import fr.utbm.info.vi51.framework.environment.SimulationAgentReady
-import fr.utbm.info.vi51.framework.math.MathUtil
-import fr.utbm.info.vi51.marines.^behavior.SeekBehaviour
-import fr.utbm.info.vi51.marines.^behavior.WanderBehaviour
-import fr.utbm.info.vi51.marines.^behavior.kinematic.KinematicSeekBehaviour
-import fr.utbm.info.vi51.marines.^behavior.kinematic.KinematicWanderBehaviour
-import fr.utbm.info.vi51.marines.^behavior.steering.SteeringAlignBehaviour
-import fr.utbm.info.vi51.marines.^behavior.steering.SteeringFaceBehaviour
-import fr.utbm.info.vi51.marines.^behavior.steering.SteeringSeekBehaviour
-import fr.utbm.info.vi51.marines.^behavior.steering.SteeringWanderBehaviour
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
-import fr.utbm.info.vi51.marines.formation.Formation
-import fr.utbm.info.vi51.marines.^behavior.AlignBehaviour
-import fr.utbm.info.vi51.marines.^behavior.kinematic.KinematicAlignBehaviour
+import java.util.ArrayList
+import fr.utbm.info.vi51.framework.environment.SimulationAgentReady
+import fr.utbm.info.vi51.marines.formation.FormationSlot
+import fr.utbm.info.vi51.marines.^agent.AbstractCommander
 
-agent Leader extends AbstractAnimat {
+/**
+ * @author celian
+ *
+ */
+
+agent Leader extends AbstractCommander {
 	
 	uses PhysicEnvironment, Lifecycle, DefaultContextInteractions
 	
-	var seekBehaviour : SeekBehaviour
-	var alignBehaviour : AlignBehaviour
-	var wanderBehaviour : WanderBehaviour
-	
-	val STOP_DISTANCE = 3f
-	val STOP_RADIUS = MathUtil.PI/10f
-	val SLOW_RADIUS = MathUtil.PI/4f
-	val WANDER_CIRCLE_DISTANCE = 20f
-	val WANDER_CIRCLE_RADIUS = 10f
-	val WANDER_MAX_ROTATION = MathUtil.PI/4f
-	
-	var formation : Formation
-	var fIndex : int
+	var slot : FormationSlot
 	
 	on Initialize {
+		
 		super._handle_Initialize_0(occurrence)
 		
-		this.formation = occurrence.parameters.get(3 + fIndex + 1) as Formation
+		// There is only one master formation to follow for the leader
+		// The index returned correspond to his place in the master formation
+		var list = new ArrayList<Object>();
+		list.add(occurrence.parameters.get(3)) 
+		var index = this.initializeFollowedFormation(list)
+		this.slot = this.followedFormation.getSlotAt(index)
 		
-		if (this.behaviorType == DynamicType::STEERING) {
-			this.seekBehaviour = new SteeringSeekBehaviour
-			var alignB = new SteeringAlignBehaviour(STOP_RADIUS, SLOW_RADIUS)
-			var faceB = new SteeringFaceBehaviour(STOP_DISTANCE, alignB)
-			this.alignBehaviour = alignB
-			this.wanderBehaviour = new SteeringWanderBehaviour(
-					WANDER_CIRCLE_DISTANCE, 
-					WANDER_CIRCLE_RADIUS, 
-					WANDER_MAX_ROTATION,
-					faceB)
-		}
-		else {
-			this.seekBehaviour =  new KinematicSeekBehaviour
-			this.alignBehaviour = new KinematicAlignBehaviour(STOP_RADIUS)
-			this.wanderBehaviour = new KinematicWanderBehaviour
-		} 
+		this.initializeOwnFormation (occurrence.parameters.get(4 + index))
+		
 		emit(new SimulationAgentReady)
 	}
-	
+
 	on PerceptionEvent {
-		this.formation.globalPosition = occurrence.body.position
-		this.formation.globalOrientation = occurrence.body.direction
+		
+		var index = this.updateFollowedFormation(occurrence.formations)
+		if (index != -1) this.slot = this.followedFormation.getSlotAt(index)
+		
+		this.ownFormation.globalPosition = occurrence.body.position
+		this.ownFormation.globalOrientation = occurrence.body.direction	
+	
+		// But also a follower behavior
+		if (this.slot === null) {
+			this.wanderBehaviour.runWander(
+				occurrence.body.position,
+				occurrence.body.direction,
+				occurrence.body.currentLinearSpeed,
+				occurrence.body.maxLinear,
+				occurrence.body.currentAngularSpeed,
+				occurrence.body.maxAngular
+			).emitInfluence			
+		} else {
+			var position = this.slot.globalPosition
+			var bo1 = this.seekBehaviour.runSeek(
+				occurrence.body.position,
+				occurrence.body.currentLinearSpeed,
+				occurrence.body.maxLinear,
+				position)
+			
+			var v = bo1.linear 
+			v.normalize
+			
+			for (obj:occurrence.perceptions) {
+				if (obj.type == "ROCK") {
+
+					var dmin = computeDistanceMin(
+						obj.position, obj.shape.bounds,
+						occurrence.body.position,
+						occurrence.body.shape.bounds
+					)
+
+					var rv = obj.position.repulsiveVector(occurrence.body.position, dmin)
+					v.add(rv)
+				}
+			}
+			
+			v.normalize
+			v.scale(occurrence.body.maxLinear)
+			bo1.linear = v
+			
+			var orientation = this.slot.globalOrientation
+			bo1.angular = this.alignBehaviour.runAlign(
+				occurrence.body.direction,
+				occurrence.body.currentAngularSpeed,
+				occurrence.body.maxAngular,
+				orientation)
+				
+			bo1.emitInfluence
+		}
 	}
+		
 }

@@ -35,11 +35,13 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 
 import fr.utbm.info.vi51.framework.gui.AbstractFrameworkGUI;
@@ -51,6 +53,8 @@ import fr.utbm.info.vi51.framework.util.Resources;
 import fr.utbm.info.vi51.marines.MainProgram;
 import fr.utbm.info.vi51.marines.formation.Formation;
 import fr.utbm.info.vi51.marines.formation.FormationSlot;
+import fr.utbm.info.vi51.marines.formation.LineFormation;
+import fr.utbm.info.vi51.marines.formation.VFormation;
 
 /** UI for the rabbits.
  * @author St&eacute;phane GALLAND &lt;stephane.galland@utbm.fr&gt;
@@ -156,6 +160,46 @@ public class GUI extends AbstractFrameworkGUI {
 		return bottomPanel;
 	}
 	
+	@Override
+	protected JComponent createRightPanel(JComponent messageBox) {
+		//(LocalizedString.getString(getClass(), "SHOW_ICONS")); //$NON-NLS-1$
+		
+		JPanel rightPanel = new JPanel();
+		rightPanel.setLayout(new GridLayout(6, 1));
+		JRadioButton formation1 = new JRadioButton("V Formation", true);
+		formation1.setActionCommand("VFormation");
+		formation1.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Formation f = new VFormation(MainProgram.MASTER_SLOT_COUNT);
+				GUI.this.environment.setMasterFormation(f);
+				GUI.this.formations.set(0, f);
+			}
+		});
+		
+		JRadioButton formation2 = new JRadioButton("Line Formation");
+		formation2.setActionCommand("LineFormation");
+		formation2.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Formation f = new LineFormation(MainProgram.MASTER_SLOT_COUNT);
+				GUI.this.environment.setMasterFormation(f);
+				GUI.this.formations.set(0, f);
+			}
+		});
+		
+		
+		ButtonGroup group = new ButtonGroup();
+		group.add(formation1);
+		group.add(formation2);
+		rightPanel.add(formation1);
+		rightPanel.add(formation2);
+		rightPanel.add(messageBox);
+		
+		return rightPanel;
+	}
+	
+	
 	/** Paint an icon and the orientation.
 	 * 
 	 * @param g2d the graphical context.
@@ -190,7 +234,7 @@ public class GUI extends AbstractFrameworkGUI {
 				icon = LEADER_ICON;
 			} else if ("FOLLOWER".equals(type)) {
 				icon = FOLLOWER_ICON;
-			} else if ("LEADER-CHIEF".equals(type)) {
+			} else if ("MASTER".equals(type)) {
 				icon = ROCK_ICON;
 			}
 			if (icon != null) {

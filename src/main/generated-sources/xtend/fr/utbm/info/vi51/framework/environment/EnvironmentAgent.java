@@ -10,6 +10,7 @@ import fr.utbm.info.vi51.framework.environment.StopSimulation;
 import fr.utbm.info.vi51.framework.time.TimeManager;
 import fr.utbm.info.vi51.framework.time.TimePercept;
 import fr.utbm.info.vi51.framework.util.AddressUUIDScope;
+import fr.utbm.info.vi51.marines.formation.Formation;
 import io.sarl.core.AgentKilled;
 import io.sarl.core.AgentSpawned;
 import io.sarl.core.Behaviors;
@@ -140,8 +141,9 @@ public class EnvironmentAgent extends Agent {
       {
         run = true;
         List<fr.utbm.info.vi51.framework.environment.Percept> _perceivedObjects = body.getPerceivedObjects();
+        List<Formation> _perceivedFormations = body.getPerceivedFormations();
         fr.utbm.info.vi51.framework.environment.Percept _percept = new fr.utbm.info.vi51.framework.environment.Percept(body);
-        PerceptionEvent event = new PerceptionEvent(_perceivedObjects, _percept, timePercept);
+        PerceptionEvent event = new PerceptionEvent(_perceivedObjects, _perceivedFormations, _percept, timePercept);
         event.setSource(this.myAdr);
         UUID _iD = body.getID();
         AddressUUIDScope _addressUUIDScope = new AddressUUIDScope(_iD);

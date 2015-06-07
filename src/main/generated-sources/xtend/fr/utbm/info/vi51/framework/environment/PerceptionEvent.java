@@ -2,6 +2,7 @@ package fr.utbm.info.vi51.framework.environment;
 
 import fr.utbm.info.vi51.framework.environment.Percept;
 import fr.utbm.info.vi51.framework.time.TimePercept;
+import fr.utbm.info.vi51.marines.formation.Formation;
 import io.sarl.lang.annotation.Generated;
 import io.sarl.lang.core.Event;
 import java.util.List;
@@ -19,8 +20,11 @@ public class PerceptionEvent extends Event {
   
   public final List<Percept> perceptions;
   
-  public PerceptionEvent(final List<Percept> p, final Percept b, final TimePercept t) {
+  public final List<Formation> formations;
+  
+  public PerceptionEvent(final List<Percept> p, final List<Formation> f, final Percept b, final TimePercept t) {
     this.perceptions = p;
+    this.formations = f;
     this.body = b;
     this.time = t;
   }
@@ -52,6 +56,11 @@ public class PerceptionEvent extends Event {
         return false;
     } else if (!this.perceptions.equals(other.perceptions))
       return false;
+    if (this.formations == null) {
+      if (other.formations != null)
+        return false;
+    } else if (!this.formations.equals(other.formations))
+      return false;
     return true;
   }
   
@@ -63,6 +72,7 @@ public class PerceptionEvent extends Event {
     result = prime * result + ((this.body== null) ? 0 : this.body.hashCode());
     result = prime * result + ((this.time== null) ? 0 : this.time.hashCode());
     result = prime * result + ((this.perceptions== null) ? 0 : this.perceptions.hashCode());
+    result = prime * result + ((this.formations== null) ? 0 : this.formations.hashCode());
     return result;
   }
   
@@ -75,9 +85,10 @@ public class PerceptionEvent extends Event {
     result.append("body  = ").append(this.body);
     result.append("time  = ").append(this.time);
     result.append("perceptions  = ").append(this.perceptions);
+    result.append("formations  = ").append(this.formations);
     return result.toString();
   }
   
   @Generated
-  private final static long serialVersionUID = 3681047883L;
+  private final static long serialVersionUID = 4005487405L;
 }

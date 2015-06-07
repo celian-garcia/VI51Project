@@ -7,7 +7,7 @@ import fr.utbm.info.vi51.framework.util.LocalizedString;
 
 public class LineFormation extends Formation{
 
-public static final float INTER_SLOT_SPACE = 200f;
+public static final float INTER_SLOT_SPACE = 100f;
 	
 	/**
 	 */

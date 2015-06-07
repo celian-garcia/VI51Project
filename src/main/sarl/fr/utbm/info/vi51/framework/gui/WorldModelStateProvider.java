@@ -20,6 +20,7 @@ package fr.utbm.info.vi51.framework.gui;
 
 import fr.utbm.info.vi51.framework.environment.WorldModelState;
 import fr.utbm.info.vi51.framework.math.Point2f;
+import fr.utbm.info.vi51.marines.formation.Formation;
 
 
 /**
@@ -35,6 +36,12 @@ public interface WorldModelStateProvider {
 	 * @param target
 	 */
 	public void setMouseTarget(Point2f target);
+	
+	/** Set the master formation.
+	 * 
+	 * @param new master formation
+	 */
+	public void setMasterFormation(Formation formation);
 
 	/** Replies the width of the environment.
 	 * 

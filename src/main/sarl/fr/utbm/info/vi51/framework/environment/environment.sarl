@@ -76,8 +76,10 @@ agent EnvironmentAgent {
 			this.environment.timeManager.lastStepDuration)
 		for(body : this.environment.agentBodies) {
 			run = true
+
 			var ^event = new PerceptionEvent(
 				body.perceivedObjects,
+				body.perceivedFormations,
 				new Percept(body),
 				timePercept)
 			^event.source = this.myAdr

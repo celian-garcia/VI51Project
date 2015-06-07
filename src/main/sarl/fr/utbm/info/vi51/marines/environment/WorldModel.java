@@ -42,6 +42,7 @@ import fr.utbm.info.vi51.framework.time.StepTimeManager;
 import fr.utbm.info.vi51.framework.time.TimeManager;
 import fr.utbm.info.vi51.framework.util.CollectionUtil;
 import fr.utbm.info.vi51.framework.util.LocalizedString;
+import fr.utbm.info.vi51.marines.formation.Formation;
 
 /**
  * Model of the world.
@@ -55,6 +56,8 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 	private final static float ROCK_SIZE = 20f;
 	
 	private MouseTarget mouseTarget = null;
+	private List<Formation> selectedFormations;
+	private Formation masterFormation = null;
 	
 	/**
 	 * @param width is the width of the world.
@@ -113,6 +116,21 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 		}
 		
 		return allPercepts;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected List<Formation> computeFormationsFor(AgentBody agent) {
+		selectedFormations = new ArrayList<>();
+//		System.out.println(this.masterFormation);
+		selectedFormations.add(this.masterFormation);
+		return selectedFormations;
+	}
+	
+	public void setMasterFormation (Formation f) {
+		this.masterFormation = f; 
 	}
 
 	/**
@@ -215,7 +233,7 @@ public class WorldModel extends AbstractEnvironment implements WorldModelStatePr
 	/** Create the body of a master.
 	 */
 	public void createMaster(){
-		createBody("LEADER-CHIEF");
+		createBody("MASTER");
 	}
 	
 	/** Create the body of a leader.

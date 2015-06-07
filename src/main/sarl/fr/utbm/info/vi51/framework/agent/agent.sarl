@@ -9,6 +9,8 @@ import java.util.UUID
 import fr.utbm.info.vi51.framework.math.Point2f
 import fr.utbm.info.vi51.framework.math.Vector2f
 import fr.utbm.info.vi51.framework.math.Rectangle2f
+import fr.utbm.info.vi51.marines.formation.Formation
+import java.util.List
 
 agent AbstractAnimat {
 	
@@ -62,4 +64,110 @@ agent AbstractAnimat {
 		return objr + mer;
 	}
 
+}
+
+agent AbstractOrganized extends AbstractAnimat {
+	/**
+	 * The own formation
+	 */
+	var ownFormation : Formation
+	
+	/**
+	 * The own master formation
+	 */
+	var ownMasterFormation : Formation
+	
+	/**
+	 * The followed formation
+	 */
+	var followedFormation : Formation
+	
+	on Initialize {
+		super._handle_Initialize_0(occurrence)
+		
+		this.ownFormation = null as Formation
+		this.ownMasterFormation = null as Formation
+		this.followedFormation = null as Formation
+	}
+	
+	def initializeFollowedFormation (formations : List<Object>) : int {
+		var i = 0
+		var index = -1
+		var formation = null as Formation
+		
+		// Search for a formation he can integrate 
+		while(index == -1 && i < formations.length) {
+			formation = formations.get(i++) as Formation
+			index = formation.allocate(false)
+		}
+		
+		if(index != -1) {
+			this.followedFormation = formation;
+		}
+		
+		return index 
+	}
+	
+	def initializeOwnFormation (formations : List<Object>) {
+		var i = 0
+		var found = false
+		var formation = null as Formation
+		
+		while(!found && i < formations.length) {
+			formation = formations.get(i++) as Formation
+			if (!formation.haveLeader) {
+				found = true
+			}
+		}
+		
+		if (found) {
+			this.ownFormation = formation
+		}
+	}
+	
+	def initializeOwnFormation (formation : Object) {
+		this.ownFormation = formation as Formation
+	}
+	
+	def initializeOwnMasterFormation (formations : List<Object>) {
+		var i = 0
+		var found = false
+		var formation = null as Formation
+		
+		while(!found && i < formations.length) {
+			formation = formations.get(i++) as Formation
+			if (!formation.haveLeader) {
+				found = true
+			}
+		}
+		
+		if (found) {
+			this.ownMasterFormation = formation
+		}
+	}
+	
+	def initializeOwnMasterFormation (formation : Object) {
+		this.ownMasterFormation = formation as Formation
+	}
+	
+	def updateFollowedFormation (formations : List<Formation>) : int {
+		var index = -1;
+		if (!formations.empty) {
+			if (formations.get(0) != null) {
+				this.followedFormation = formations.get(0)
+				index = this.followedFormation.allocate(false)
+			}
+		}
+		return index
+	}
+	
+	def updateOwnFormation (formation : Formation) {
+		//TODO : 
+	}
+	
+	def updateOwnMasterFormation (formations : List<Formation>) {
+		if (!formations.empty)
+			if (formations.get(0) != null)
+				this.ownMasterFormation = formations.get(0)
+	}
 }

@@ -30,7 +30,7 @@ public class VFormation extends Formation {
 
 	/** Space between slots.
 	 */
-	public static final float INTER_SLOT_SPACE = 50f;
+	public static final float INTER_SLOT_SPACE = 100f;
 	
 	/**
 	 */

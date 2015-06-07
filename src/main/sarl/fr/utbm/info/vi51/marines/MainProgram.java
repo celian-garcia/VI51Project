@@ -27,8 +27,8 @@ import fr.utbm.info.vi51.framework.gui.FrameworkGUI;
 import fr.utbm.info.vi51.framework.util.LocalizedString;
 import fr.utbm.info.vi51.framework.util.SpawnMapping;
 import fr.utbm.info.vi51.marines.agent.Follower;
-import fr.utbm.info.vi51.marines.agent.LeaderChief;
-import fr.utbm.info.vi51.marines.agent.SubLeader;
+import fr.utbm.info.vi51.marines.agent.Leader;
+import fr.utbm.info.vi51.marines.agent.Master;
 import fr.utbm.info.vi51.marines.environment.WorldModel;
 import fr.utbm.info.vi51.marines.formation.BodyGuardFormation;
 import fr.utbm.info.vi51.marines.formation.CircleFormation;
@@ -50,7 +50,8 @@ public class MainProgram {
 
 	private static float WORLD_SIZE_X = 1400;
 	private static float WORLD_SIZE_Y = 700;
-	private static int SLOT_COUNT = 9;
+	public static int SLOT_COUNT = 10;
+	public static int MASTER_SLOT_COUNT = 5;
 	
 	/** Main program.
 	 * 
@@ -66,25 +67,16 @@ public class MainProgram {
 			System.exit(0);
 		}
 		
-		// Initialize formations and assignments
+		// Initialize formations
 		// First formation is the master formation 
 		// Others formation are the leader formations
-
 		Formation[] formations = new Formation[]{
-				new LineFormation(5),
+				new LineFormation(MASTER_SLOT_COUNT),
 				new CircleFormation (SLOT_COUNT),
 //				new RectangleFormation (SLOT_COUNT),
 //				new RectangleFormation (SLOT_COUNT),
 				new SurroundFormation (SLOT_COUNT),
 				new SurroundFormation (SLOT_COUNT)
-		};
-		FormationAssignment[] formationAssignments = new FormationAssignment[]{
-				new FormationAssignment(5),
-				new FormationAssignment(SLOT_COUNT),
-				new FormationAssignment(SLOT_COUNT),
-				new FormationAssignment(SLOT_COUNT),
-//				new FormationAssignment(SLOT_COUNT),
-//				new FormationAssignment(SLOT_COUNT)
 		};
 		
 		
@@ -123,18 +115,11 @@ public class MainProgram {
 		FrameworkGUI gui = new GUI(WORLD_SIZE_X, WORLD_SIZE_Y, environment.getTimeManager(), formations);
 
 		
-		// Initialize parameters
-		Object [] params = new Object[formations.length + formationAssignments.length];
+		// Initialize parameters to send to janus
+		Object [] params = new Object[formations.length];
 		int i = 0;
 		for (Formation f:formations) {
 			params[i++] = f;
-		}
-		for (FormationAssignment fa : formationAssignments) {
-			params[i++] = fa;
-		}
-		
-		for (Object o :params) {
-			System.out.println(o);
 		}
 		
 		
@@ -153,13 +138,13 @@ public class MainProgram {
 
 			Object type = body.getType();
 			if ("LEADER".equals(type)) {
-				return SubLeader.class;
+				return Leader.class;
 			}
 			if ("FOLLOWER".equals(type)) {
 				return Follower.class;
 			}
-			if ("LEADER-CHIEF".equals(type)) {
-				return LeaderChief.class;
+			if ("MASTER".equals(type)) {
+				return Master.class;
 			}
 			throw new IllegalArgumentException();
 		}

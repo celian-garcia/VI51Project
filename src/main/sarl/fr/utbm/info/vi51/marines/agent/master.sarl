@@ -8,36 +8,49 @@ import fr.utbm.info.vi51.framework.environment.PerceptionEvent
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
-import fr.utbm.info.vi51.marines.formation.Formation
+import java.util.ArrayList
+import fr.utbm.info.vi51.framework.environment.SimulationAgentReady
+import fr.utbm.info.vi51.marines.^agent.AbstractCommander
 
 /**
  * @author celian
  *
  */
 
-agent LeaderChief extends Leader {
+agent Master extends AbstractCommander {
 	
 	uses PhysicEnvironment, Lifecycle, DefaultContextInteractions
 	
-	var chiefFormation : Formation
 	
 	on Initialize {
-		
-		// The parameter of index 3 is the master formation
-		this.chiefFormation = occurrence.parameters.get(3) as Formation
-		
-		this.fIndex = 0;
 		super._handle_Initialize_0(occurrence)
+		
+		// There is only one master formation
+		var list = new ArrayList<Object>();
+		list.add(occurrence.parameters.get(3)) 
+		this.initializeOwnMasterFormation(list)
+		
+		// Search for a "without leader" formation
+		var start = 4;
+		var end = occurrence.parameters.length
+		this.initializeOwnFormation(occurrence.parameters.subList(start, end))
+		
+		emit(new SimulationAgentReady)
+		
 	}
 
 	
 	on PerceptionEvent [ occurrence.perceptions.empty ] {
-		// Adopt a leader behaviour
-		super._handle_PerceptionEvent_1(occurrence)
 		
-		// But also a MasterChief behaviour
-		this.chiefFormation.globalPosition = occurrence.body.position
-		this.chiefFormation.globalOrientation = occurrence.body.direction
+		this.updateOwnMasterFormation(occurrence.formations)
+		
+		// Adopt a Leader behaviour
+		this.ownFormation.globalPosition = occurrence.body.position
+		this.ownFormation.globalOrientation = occurrence.body.direction	
+			
+		// But also a Master behavior
+		this.ownMasterFormation.globalPosition = occurrence.body.position
+		this.ownMasterFormation.globalOrientation = occurrence.body.direction
 		
 		this.wanderBehaviour.runWander(
 			occurrence.body.position,
@@ -51,12 +64,16 @@ agent LeaderChief extends Leader {
 	
 	
 	on PerceptionEvent [ !occurrence.perceptions.empty ] {
-		// Adopt a leader behaviour
-		super._handle_PerceptionEvent_1(occurrence)
 		
+		this.updateOwnMasterFormation(occurrence.formations)
+		
+		// Adopt a Leader behaviour
+		this.ownFormation.globalPosition = occurrence.body.position
+		this.ownFormation.globalOrientation = occurrence.body.direction	
+			
 		// But also a MasterChief behaviour
-		this.chiefFormation.globalPosition = occurrence.body.position
-		this.chiefFormation.globalOrientation = occurrence.body.direction
+		this.ownMasterFormation.globalPosition = occurrence.body.position
+		this.ownMasterFormation.globalOrientation = occurrence.body.direction
 		
 		var firstPercept = occurrence.perceptions.get(0)
 
@@ -106,5 +123,9 @@ agent LeaderChief extends Leader {
 			).emitInfluence
 		}
 	}
+//	
+//	def updateFormation {
+//		println("blabla")
+//	}
 	
 }
