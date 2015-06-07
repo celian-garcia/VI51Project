@@ -27,7 +27,6 @@ import fr.utbm.info.vi51.framework.gui.FrameworkGUI;
 import fr.utbm.info.vi51.framework.util.LocalizedString;
 import fr.utbm.info.vi51.framework.util.SpawnMapping;
 import fr.utbm.info.vi51.marines.agent.Follower;
-import fr.utbm.info.vi51.marines.agent.Leader;
 import fr.utbm.info.vi51.marines.agent.LeaderChief;
 import fr.utbm.info.vi51.marines.agent.SubLeader;
 import fr.utbm.info.vi51.marines.environment.WorldModel;
@@ -51,7 +50,7 @@ public class MainProgram {
 
 	private static float WORLD_SIZE_X = 1400;
 	private static float WORLD_SIZE_Y = 700;
-	private static int SLOT_COUNT = 6;
+	private static int SLOT_COUNT = 9;
 	
 	/** Main program.
 	 * 
@@ -74,8 +73,8 @@ public class MainProgram {
 		Formation[] formations = new Formation[]{
 				new LineFormation(5),
 				new CircleFormation (SLOT_COUNT),
-				new RectangleFormation (SLOT_COUNT),
-				new RectangleFormation (SLOT_COUNT),
+//				new RectangleFormation (SLOT_COUNT),
+//				new RectangleFormation (SLOT_COUNT),
 				new SurroundFormation (SLOT_COUNT),
 				new SurroundFormation (SLOT_COUNT)
 		};
@@ -84,8 +83,8 @@ public class MainProgram {
 				new FormationAssignment(SLOT_COUNT),
 				new FormationAssignment(SLOT_COUNT),
 				new FormationAssignment(SLOT_COUNT),
-				new FormationAssignment(SLOT_COUNT),
-				new FormationAssignment(SLOT_COUNT)
+//				new FormationAssignment(SLOT_COUNT),
+//				new FormationAssignment(SLOT_COUNT)
 		};
 		
 		
@@ -94,8 +93,8 @@ public class MainProgram {
 		environment.createMaster();
 		environment.createLeader();
 		environment.createLeader();
-		environment.createLeader();
-		environment.createLeader();
+//		environment.createLeader();
+//		environment.createLeader();
 
 		environment.createFollower();
 		environment.createFollower();
