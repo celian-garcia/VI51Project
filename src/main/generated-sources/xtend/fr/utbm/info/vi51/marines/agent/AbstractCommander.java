@@ -55,7 +55,7 @@ public class AbstractCommander extends AbstractOrganized {
         this.WANDER_MAX_ROTATION, faceB);
       this.wanderBehaviour = _steeringWanderBehaviour;
     } else {
-      KinematicSeekBehaviour _kinematicSeekBehaviour = new KinematicSeekBehaviour();
+      KinematicSeekBehaviour _kinematicSeekBehaviour = new KinematicSeekBehaviour(5.0f);
       this.seekBehaviour = _kinematicSeekBehaviour;
       KinematicAlignBehaviour _kinematicAlignBehaviour = new KinematicAlignBehaviour(this.STOP_RADIUS);
       this.alignBehaviour = _kinematicAlignBehaviour;

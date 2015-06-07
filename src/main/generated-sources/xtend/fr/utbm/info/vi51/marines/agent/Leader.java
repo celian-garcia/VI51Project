@@ -72,11 +72,11 @@ public class Leader extends AbstractCommander {
       BehaviourOutput _runWander = this.wanderBehaviour.runWander(_position_1, _direction_1, _currentLinearSpeed, _maxLinear, _currentAngularSpeed, _maxAngular);
       this.emitInfluence(_runWander);
     } else {
-      Point2f position = this.slot.getGlobalPosition();
+      Point2f target = this.slot.getGlobalPosition();
       Point2f _position_2 = occurrence.body.getPosition();
       float _currentLinearSpeed_1 = occurrence.body.getCurrentLinearSpeed();
       float _maxLinear_1 = this.getMaxLinear(occurrence.body);
-      BehaviourOutput bo1 = this.seekBehaviour.runSeek(_position_2, _currentLinearSpeed_1, _maxLinear_1, position);
+      BehaviourOutput bo1 = this.seekBehaviour.runSeek(_position_2, _currentLinearSpeed_1, _maxLinear_1, target);
       Vector2f v = bo1.getLinear();
       v.normalize();
       for (final fr.utbm.info.vi51.framework.environment.Percept obj : occurrence.perceptions) {
@@ -100,12 +100,25 @@ public class Leader extends AbstractCommander {
       float _maxLinear_2 = this.getMaxLinear(occurrence.body);
       v.scale(_maxLinear_2);
       bo1.setLinear(v);
-      Vector2f orientation = this.slot.getGlobalOrientation();
-      Vector2f _direction_2 = occurrence.body.getDirection();
-      float _currentAngularSpeed_1 = occurrence.body.getCurrentAngularSpeed();
-      float _maxAngular_1 = this.getMaxAngular(occurrence.body);
-      BehaviourOutput _runAlign = this.alignBehaviour.runAlign(_direction_2, _currentAngularSpeed_1, _maxAngular_1, orientation);
-      bo1.setAngular(_runAlign);
+      Vector2f direction = new Vector2f();
+      Point2f _position_7 = occurrence.body.getPosition();
+      direction.sub(_position_7, target);
+      float _length = direction.length();
+      boolean _lessThan = (_length < 5.0f);
+      if (_lessThan) {
+        Vector2f orientation = this.slot.getGlobalOrientation();
+        Vector2f _direction_2 = occurrence.body.getDirection();
+        float _currentAngularSpeed_1 = occurrence.body.getCurrentAngularSpeed();
+        float _maxAngular_1 = this.getMaxAngular(occurrence.body);
+        BehaviourOutput _runAlign = this.alignBehaviour.runAlign(_direction_2, _currentAngularSpeed_1, _maxAngular_1, orientation);
+        bo1.setAngular(_runAlign);
+      } else {
+        Vector2f _direction_3 = occurrence.body.getDirection();
+        float _currentAngularSpeed_2 = occurrence.body.getCurrentAngularSpeed();
+        float _maxAngular_2 = this.getMaxAngular(occurrence.body);
+        BehaviourOutput _runAlign_1 = this.alignBehaviour.runAlign(_direction_3, _currentAngularSpeed_2, _maxAngular_2, direction);
+        bo1.setAngular(_runAlign_1);
+      }
       this.emitInfluence(bo1);
     }
   }

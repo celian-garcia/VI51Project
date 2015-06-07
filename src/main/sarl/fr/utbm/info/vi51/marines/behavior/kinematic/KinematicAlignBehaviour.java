@@ -43,7 +43,7 @@ public class KinematicAlignBehaviour implements AlignBehaviour {
 	
 	private void stop(BehaviourOutput output, float angularSpeed, float maxAngularSpeed) {
 		float acc = -Math.min(Math.abs(angularSpeed), maxAngularSpeed);
-		output.setAngular(Math.signum(angularSpeed)*acc);
+		output.setAngular(Math.signum(angularSpeed)*Math.abs(acc));
 	}
 	
 	/**
@@ -54,23 +54,13 @@ public class KinematicAlignBehaviour implements AlignBehaviour {
 
 		// Get the naive direction to target, with an angle representation
 		float rotation = orientation.signedAngle(target);
-		
-		if (rotation!=0 && angularSpeed==0) {
-			output.setAngular((float) Math.signum(rotation) * Math.min(maxAngularSpeed,rotation));
+
+		if (target.length() < this.stopRadius) {
+			// try to stop
+			stop(output, angularSpeed, maxAngularSpeed);
 		}
 		else {
-			// the result is already mapped to (-pi,pi) interval with signedAngle()		
-			float rotationSize = Math.abs(rotation);
-			
-			// Check if we are there
-			if (rotationSize<this.stopRadius) {
-				// try to stop
-				stop(output, angularSpeed, maxAngularSpeed);
-			}
-			else {
-				// Turn as fast as possible
-				output.setAngular(Math.signum(rotation) * maxAngularSpeed);
-			}
+			output.setAngular((float) Math.signum(rotation) * Math.min(maxAngularSpeed, Math.abs(rotation)));
 		}
 		
 		return output;

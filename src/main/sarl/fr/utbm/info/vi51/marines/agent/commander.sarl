@@ -47,7 +47,7 @@ agent AbstractCommander extends AbstractOrganized {
 					faceB)
 		}
 		else {
-			this.seekBehaviour =  new KinematicSeekBehaviour
+			this.seekBehaviour =  new KinematicSeekBehaviour (5.0f)
 			this.alignBehaviour = new KinematicAlignBehaviour(STOP_RADIUS)
 			this.wanderBehaviour = new KinematicWanderBehaviour
 		} 

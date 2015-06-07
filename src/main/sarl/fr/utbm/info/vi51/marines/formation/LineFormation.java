@@ -1,8 +1,6 @@
 package fr.utbm.info.vi51.marines.formation;
 
 
-import fr.utbm.info.vi51.framework.math.MathUtil;
-import fr.utbm.info.vi51.framework.math.Vector2f;
 import fr.utbm.info.vi51.framework.util.LocalizedString;
 
 public class LineFormation extends Formation{

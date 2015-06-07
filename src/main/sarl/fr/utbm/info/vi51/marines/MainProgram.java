@@ -46,6 +46,7 @@ import fr.utbm.info.vi51.marines.gui.GUI;
  * @author St&eacute;phane GALLAND &lt;stephane.galland@utbm.fr&gt;
  * @version $Name$ $Revision$ $Date$
  */
+@SuppressWarnings("unused")
 public class MainProgram {
 
 	private static float WORLD_SIZE_X = 1400;
@@ -75,7 +76,7 @@ public class MainProgram {
 				new CircleFormation (SLOT_COUNT),
 //				new RectangleFormation (SLOT_COUNT),
 //				new RectangleFormation (SLOT_COUNT),
-				new SurroundFormation (SLOT_COUNT),
+				new DeltaFormation(SLOT_COUNT),
 				new SurroundFormation (SLOT_COUNT)
 		};
 		

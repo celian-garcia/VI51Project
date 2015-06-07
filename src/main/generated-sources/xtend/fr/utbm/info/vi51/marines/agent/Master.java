@@ -131,15 +131,23 @@ public class Master extends AbstractCommander {
         float _maxLinear_1 = this.getMaxLinear(occurrence.body);
         v.scale(_maxLinear_1);
         bo1.setLinear(v);
-        this.emitInfluence(bo1);
-      } else {
+        Vector2f alignTarget = new Vector2f();
         Point2f _position_8 = occurrence.body.getPosition();
+        alignTarget.sub(_position_8, target);
         Vector2f _direction_2 = occurrence.body.getDirection();
-        float _currentLinearSpeed_1 = occurrence.body.getCurrentLinearSpeed();
-        float _maxLinear_2 = this.getMaxLinear(occurrence.body);
         float _currentAngularSpeed = occurrence.body.getCurrentAngularSpeed();
         float _maxAngular = this.getMaxAngular(occurrence.body);
-        BehaviourOutput _runWander = this.wanderBehaviour.runWander(_position_8, _direction_2, _currentLinearSpeed_1, _maxLinear_2, _currentAngularSpeed, _maxAngular);
+        BehaviourOutput _runAlign = this.alignBehaviour.runAlign(_direction_2, _currentAngularSpeed, _maxAngular, alignTarget);
+        bo1.setAngular(_runAlign);
+        this.emitInfluence(bo1);
+      } else {
+        Point2f _position_9 = occurrence.body.getPosition();
+        Vector2f _direction_3 = occurrence.body.getDirection();
+        float _currentLinearSpeed_1 = occurrence.body.getCurrentLinearSpeed();
+        float _maxLinear_2 = this.getMaxLinear(occurrence.body);
+        float _currentAngularSpeed_1 = occurrence.body.getCurrentAngularSpeed();
+        float _maxAngular_1 = this.getMaxAngular(occurrence.body);
+        BehaviourOutput _runWander = this.wanderBehaviour.runWander(_position_9, _direction_3, _currentLinearSpeed_1, _maxLinear_2, _currentAngularSpeed_1, _maxAngular_1);
         this.emitInfluence(_runWander);
       }
     }

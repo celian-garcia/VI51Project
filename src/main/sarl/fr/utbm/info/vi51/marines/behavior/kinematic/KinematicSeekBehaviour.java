@@ -31,7 +31,12 @@ import fr.utbm.info.vi51.marines.behavior.SeekBehaviour;
  * @version $Name$ $Revision$ $Date$
  */
 public class KinematicSeekBehaviour implements SeekBehaviour {
-
+	private float stopRadius;
+	
+	public KinematicSeekBehaviour(float stopRadius) {
+		this.stopRadius = stopRadius;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -41,11 +46,15 @@ public class KinematicSeekBehaviour implements SeekBehaviour {
 		Vector2f direction = new Vector2f();
 		direction.sub(target,position);
 		
-		direction.normalize();		
-		direction.scale(maxLinearSpeed);
-		
-		output.setLinear(direction.getX(), direction.getY());
-		
+		if (direction.length() < this.stopRadius) {
+			output.setLinear(new Vector2f(0, 0));
+		}
+		else {
+			direction.normalize();		
+			direction.scale(maxLinearSpeed);
+			
+			output.setLinear(direction.getX(), direction.getY());
+		}
 		return output;
 	}
 	

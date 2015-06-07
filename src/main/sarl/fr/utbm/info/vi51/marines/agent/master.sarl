@@ -11,6 +11,7 @@ import io.sarl.core.Lifecycle
 import java.util.ArrayList
 import fr.utbm.info.vi51.framework.environment.SimulationAgentReady
 import fr.utbm.info.vi51.marines.^agent.AbstractCommander
+import fr.utbm.info.vi51.framework.math.Vector2f
 
 /**
  * @author celian
@@ -109,6 +110,16 @@ agent Master extends AbstractCommander {
 			v.normalize
 			v.scale(occurrence.body.maxLinear)
 			bo1.linear = v
+			
+			var alignTarget = new Vector2f();
+			alignTarget.sub(occurrence.body.position, target);
+
+			bo1.angular = this.alignBehaviour.runAlign(
+				occurrence.body.direction,
+				occurrence.body.currentAngularSpeed,
+				occurrence.body.maxAngular,
+				alignTarget
+			)
 			bo1.emitInfluence
 		}
 		else {
@@ -123,9 +134,5 @@ agent Master extends AbstractCommander {
 			).emitInfluence
 		}
 	}
-//	
-//	def updateFormation {
-//		println("blabla")
-//	}
 	
 }
