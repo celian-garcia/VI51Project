@@ -51,7 +51,7 @@ public class MainProgram {
 
 	private static float WORLD_SIZE_X = 1400;
 	private static float WORLD_SIZE_Y = 700;
-	public static int SLOT_COUNT = 10;
+	public static int SLOT_COUNT = 11;
 	public static int MASTER_SLOT_COUNT = 5;
 	
 	/** Main program.
@@ -72,47 +72,30 @@ public class MainProgram {
 		// First formation is the master formation 
 		// Others formation are the leader formations
 		Formation[] formations = new Formation[]{
-				new LineFormation(MASTER_SLOT_COUNT),
-				new CircleFormation (SLOT_COUNT),
-//				new RectangleFormation (SLOT_COUNT),
-//				new RectangleFormation (SLOT_COUNT),
-				new DeltaFormation(SLOT_COUNT),
-				new SurroundFormation (SLOT_COUNT)
+				new VFormation(MASTER_SLOT_COUNT),
+				new DeltaFormation (SLOT_COUNT),
+				new DeltaFormation (SLOT_COUNT),
+				new DeltaFormation (SLOT_COUNT),
+				new DeltaFormation (SLOT_COUNT),
+				new DeltaFormation (SLOT_COUNT)
 		};
 		
 		
 		WorldModel environment = new WorldModel(WORLD_SIZE_X, WORLD_SIZE_Y);
 		
 		environment.createMaster();
-		environment.createLeader();
-		environment.createLeader();
-//		environment.createLeader();
-//		environment.createLeader();
+		for (int i = 0; i < MASTER_SLOT_COUNT-1; i++) {
+			environment.createLeader();
+		}
 
-		environment.createFollower();
-		environment.createFollower();
-		environment.createFollower();
-		environment.createFollower();
-		environment.createFollower();
-		environment.createFollower();
-		environment.createFollower();
-		environment.createFollower();
-		environment.createFollower();
-		environment.createFollower();
-		environment.createFollower();
-		environment.createFollower();
-		environment.createFollower();
-		environment.createFollower();
-		environment.createFollower();
-		environment.createFollower();
-		environment.createFollower();
-		environment.createRock(200f, 200f);
-		environment.createRock(300f, 300f);
-		environment.createRock(400f, 400f);
-		environment.createRock(400f, 500f);
-		environment.createRock(500f, 400f);
-		environment.createRock(600f, 300f);
+		for (int i = 0; i < MASTER_SLOT_COUNT*(SLOT_COUNT-1); i++) {
+			environment.createFollower();
+		}
 		
+		environment.createRock(200f, 200f);
+		environment.createRock(200f, 300f);
+		environment.createRock(150f, 500f);
+		environment.createRock(400f, 200f);
 		FrameworkGUI gui = new GUI(WORLD_SIZE_X, WORLD_SIZE_Y, environment.getTimeManager(), formations);
 
 		

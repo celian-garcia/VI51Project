@@ -5,7 +5,7 @@ import fr.utbm.info.vi51.framework.math.Vector2f;
 import fr.utbm.info.vi51.framework.util.LocalizedString;
 
 public class SurroundFormation extends Formation{
-	public static final float INTER_SLOT_SPACE = 50f;
+	public static final float INTER_SLOT_SPACE = 100f;
 	
 	public SurroundFormation() {
 		scale(1);

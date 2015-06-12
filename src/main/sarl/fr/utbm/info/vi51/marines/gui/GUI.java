@@ -71,6 +71,7 @@ public class GUI extends AbstractFrameworkGUI {
 	private static final float SPOT_RADIUS = 20f;
 
 	private static final Icon CARROT_ICON;
+	private static final Icon MASTER_ICON;
 	private static final Icon LEADER_ICON;
 	private static final Icon FOLLOWER_ICON;
 	private static final Icon ROCK_ICON;
@@ -80,9 +81,11 @@ public class GUI extends AbstractFrameworkGUI {
 	static {
 		System.out.println(GUI.class);
 
-		URL url = Resources.getResource(GUI.class, "leader.png"); //$NON-NLS-1$
+		URL url = Resources.getResource(GUI.class, "master.png"); //$NON-NLS-1$
 		assert(url!=null);
-		
+		MASTER_ICON = new ImageIcon(url);
+		url = Resources.getResource(GUI.class, "leader.png"); //$NON-NLS-1$
+		assert(url!=null);
 		LEADER_ICON = new ImageIcon(url);
 		url = Resources.getResource(GUI.class, "follower.png"); //$NON-NLS-1$
 		assert(url!=null);
@@ -174,6 +177,7 @@ public class GUI extends AbstractFrameworkGUI {
 				Formation f = new VFormation(MainProgram.MASTER_SLOT_COUNT);
 				GUI.this.environment.setMasterFormation(f);
 				GUI.this.formations.set(0, f);
+				repaint();
 			}
 		});
 		
@@ -185,6 +189,7 @@ public class GUI extends AbstractFrameworkGUI {
 				Formation f = new LineFormation(MainProgram.MASTER_SLOT_COUNT);
 				GUI.this.environment.setMasterFormation(f);
 				GUI.this.formations.set(0, f);
+				repaint();
 			}
 		});
 		
@@ -235,7 +240,7 @@ public class GUI extends AbstractFrameworkGUI {
 			} else if ("FOLLOWER".equals(type)) {
 				icon = FOLLOWER_ICON;
 			} else if ("MASTER".equals(type)) {
-				icon = ROCK_ICON;
+				icon = MASTER_ICON;
 			}
 			if (icon != null) {
 				paintIcon(g2d, icon, positionOnScreen, orientationOnScreen);
